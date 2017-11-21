@@ -1,6 +1,7 @@
 package com.android.test.demo;
 
 import com.android.test.joor.TestJOOR;
+import com.android.test.life.TestLife;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +18,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_joor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(getApplicationContext(), TestJOOR.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), TestJOOR.class));
+            }
+        });
+
+        findViewById(R.id.btn_view_activity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), TestLife.class));
             }
         });
     }
