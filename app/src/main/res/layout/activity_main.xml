@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.android.test.demo.MainActivity"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <Button
+            android:id="@+id/btn_joor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="jOOR反射学习"
+            android:layout_marginBottom="10dp"
+            />
+        <Button
+            android:id="@+id/btn_view_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="在View中监听宿主Activity的生命周期实现"
+            android:layout_marginBottom="10dp"
+            />
+    </LinearLayout>
+
+</ScrollView>
