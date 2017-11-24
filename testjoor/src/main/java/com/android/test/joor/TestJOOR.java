@@ -111,7 +111,18 @@ public class TestJOOR extends AppCompatActivity {
         final String value5 = Reflect.on(map).as(POJOInterface.class).getBaz(); //value5 = "MyMap: baz-test";
         Log.d(TAG, "size: " + size + ", value4: " + value4 + ", value5: " + value5);
 
-        Reflect.on(map).as(POJOInterface.class).tetProxy("this is proxy test!!");
+        //Reflect.on(map).as(POJOInterface.class).tetProxy("this is proxy test!!");
+
+        Test.disableResize(this);
+
+        final int height = Test.getStatusBarHeight(this);
+        Log.d(TAG, "status bar height: " + height);
+
+        final boolean split = Test.isSplitMode(this);
+        Log.d(TAG, "split: " + split);
+
+        final int count = Test.getActivityThreadNumVisibleActivities();
+        Log.d(TAG, "count: " + count);
     }
 
     private class TestBean extends HashMap<String, Object> {
