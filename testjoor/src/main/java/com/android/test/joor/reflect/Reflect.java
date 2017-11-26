@@ -167,6 +167,8 @@ public class Reflect {
     }*/
     /* [/java-8] */
 
+
+    private static final boolean REFLECT_CACHED = true;
     /**
      * The type of the wrapped object.
      */
@@ -176,6 +178,11 @@ public class Reflect {
      * The wrapped object.
      */
     private final Object object;
+
+    /**
+     * The cache Reflect
+     */
+    private final ReflectCache cache = new ReflectCache(REFLECT_CACHED);
 
     // ---------------------------------------------------------------------
     // Constructors
@@ -765,17 +772,28 @@ public class Reflect {
      * @see Class#forName(String)
      */
     private static Class<?> forName(String name) throws ReflectException {
-        try {
-            return Class.forName(name);
-        }
-        catch (Exception e) {
-            throw new ReflectException(e);
-        }
+        return forName(name, null);
     }
 
+    /**
+     * Load a class
+     *
+     * @see Class#forName(String)
+     */
     private static Class<?> forName(String name, ClassLoader classLoader) throws ReflectException {
         try {
-            return Class.forName(name, true, classLoader);
+            ReflectCache cache = new ReflectCache(REFLECT_CACHED);
+            final String key = cache.formatClassName(name, classLoader);
+            Class<?> classT = cache.getClass(key);
+            if (classT == null) {
+                if (classLoader == null) {
+                    classT = Class.forName(name);
+                } else {
+                    classT = Class.forName(name, true, classLoader);
+                }
+                cache.putClass(key, classT);
+            }
+            return classT;
         }
         catch (Exception e) {
             throw new ReflectException(e);
