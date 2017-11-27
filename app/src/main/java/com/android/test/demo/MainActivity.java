@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String TAG = "TestGH";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (DLog.LOGED) DLog.i(TAG, "MainActivity is oncrated!!");
+
 
         findViewById(R.id.btn_joor).setOnClickListener(new View.OnClickListener() {
             @Override
