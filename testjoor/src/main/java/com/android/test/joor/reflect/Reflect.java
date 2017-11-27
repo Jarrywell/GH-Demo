@@ -79,7 +79,7 @@ public class Reflect {
      * @throws ReflectException If any reflection exception occurred.
      * @see #on(Class)
      */
-    public static Reflect on(String name, ClassLoader classLoader) throws ReflectException {
+    private static Reflect on(String name, ClassLoader classLoader) throws ReflectException {
         return on(forName(name, classLoader));
     }
 
@@ -144,6 +144,10 @@ public class Reflect {
         }
 
         return accessible;
+    }
+
+    public static void release() {
+        new ReflectCache(REFLECT_CACHED).release(true);
     }
 
     // ---------------------------------------------------------------------
@@ -299,25 +303,36 @@ public class Reflect {
     private Field field0(String name) throws ReflectException {
         Class<?> t = type();
 
-        // Try getting a public field
-        try {
-            return accessible(t.getField(name));
-        }
-
-        // Try again, getting a non-public field
-        catch (NoSuchFieldException e) {
-            do {
+        final String key = cache.formatFieldKey(t, name);
+        Field field = cache.getField(key);
+        if (field == null) {
+            if (!cache.contains(key)) {
+                // Try getting a public field
                 try {
-                    return accessible(t.getDeclaredField(name));
+                    field = accessible(t.getField(name));
+                    cache.put(key, field);
+                    return field;
                 }
-                catch (NoSuchFieldException ignore) {}
 
-                t = t.getSuperclass();
+                // Try again, getting a non-public field
+                catch (NoSuchFieldException e) {
+                    do {
+                        try {
+                            field = accessible(t.getDeclaredField(name));
+                            cache.put(key, field);
+                            return field;
+                        }
+                        catch (NoSuchFieldException ignore) {}
+
+                        t = t.getSuperclass();
+                    }
+                    while (t != null);
+                    cache.put(key, null);
+                    throw new ReflectException(e);
+                }
             }
-            while (t != null);
-
-            throw new ReflectException(e);
         }
+        return field;
     }
 
     /**
@@ -442,25 +457,38 @@ public class Reflect {
     private Method exactMethod(String name, Class<?>[] types) throws NoSuchMethodException {
         Class<?> t = type();
 
-        // first priority: find a public method with exact signature match in class hierarchy
-        try {
-            return t.getMethod(name, types);
-        }
-
-        // second priority: find a private method with exact signature match on declaring class
-        catch (NoSuchMethodException e) {
-            do {
+        final String key = cache.formatMethodKey(t, name, types);
+        Method method = cache.getMethod(key);
+        if (method == null) {
+            if (!cache.contains(key)) {
+                // first priority: find a public method with exact signature match in class hierarchy
                 try {
-                    return t.getDeclaredMethod(name, types);
+                    method = t.getMethod(name, types);
+                    cache.put(key, method);
+                    return method;
                 }
-                catch (NoSuchMethodException ignore) {}
 
-                t = t.getSuperclass();
+                // second priority: find a private method with exact signature match on declaring class
+                catch (NoSuchMethodException e) {
+                    do {
+                        try {
+                            method = t.getDeclaredMethod(name, types);
+                            cache.put(key, method);
+                            return method;
+                        }
+                        catch (NoSuchMethodException ignore) {}
+
+                        t = t.getSuperclass();
+                    }
+                    while (t != null);
+                    //cache.put(key, null);  //还需要继续similarMethod(),这里不能put(null)
+                    throw new NoSuchMethodException();
+                }
+            } else {
+                throw new NoSuchMethodException();
             }
-            while (t != null);
-
-            throw new NoSuchMethodException();
         }
+        return method;
     }
 
     /**
@@ -474,27 +502,38 @@ public class Reflect {
     private Method similarMethod(String name, Class<?>[] types) throws NoSuchMethodException {
         Class<?> t = type();
 
-        // first priority: find a public method with a "similar" signature in class hierarchy
-        // similar interpreted in when primitive argument types are converted to their wrappers
-        for (Method method : t.getMethods()) {
-            if (isSimilarSignature(method, name, types)) {
-                return method;
-            }
-        }
-
-        // second priority: find a non-public method with a "similar" signature on declaring class
-        do {
-            for (Method method : t.getDeclaredMethods()) {
-                if (isSimilarSignature(method, name, types)) {
-                    return method;
+        final String key = cache.formatMethodKey(t, name, types);
+        Method cacheMethod = cache.getMethod(key);
+        if (cacheMethod == null) {
+            if (!cache.contains(key)) {
+                // first priority: find a public method with a "similar" signature in class hierarchy
+                // similar interpreted in when primitive argument types are converted to their wrappers
+                for (Method method : t.getMethods()) {
+                    if (isSimilarSignature(method, name, types)) {
+                        cache.put(key, method);
+                        return method;
+                    }
                 }
+
+                // second priority: find a non-public method with a "similar" signature on declaring class
+                do {
+                    for (Method method : t.getDeclaredMethods()) {
+                        if (isSimilarSignature(method, name, types)) {
+                            cache.put(key, method);
+                            return method;
+                        }
+                    }
+
+                    t = t.getSuperclass();
+                }
+                while (t != null);
+                cache.put(key, null);
+                throw new NoSuchMethodException("No similar method " + name + " with params " + Arrays.toString(types) + " could be found on type " + type() + ".");
+            } else {
+                throw new NoSuchMethodException("No similar cache method " + name + " with params " + Arrays.toString(types) + " could be found on type " + type() + ".");
             }
-
-            t = t.getSuperclass();
         }
-        while (t != null);
-
-        throw new NoSuchMethodException("No similar method " + name + " with params " + Arrays.toString(types) + " could be found on type " + type() + ".");
+        return cacheMethod;
     }
 
     /**
@@ -546,26 +585,40 @@ public class Reflect {
      * @throws ReflectException If any reflection exception occurred.
      */
     public Reflect create(Object... args) throws ReflectException {
+
+        final Class<?> t = type();
+
         Class<?>[] types = types(args);
 
-        // Try invoking the "canonical" constructor, i.e. the one with exact
-        // matching argument types
-        try {
-            Constructor<?> constructor = type().getDeclaredConstructor(types);
-            return on(constructor, args);
-        }
-
-        // If there is no exact match, try to find one that has a "similar"
-        // signature if primitive argument types are converted to their wrappers
-        catch (NoSuchMethodException e) {
-            for (Constructor<?> constructor : type().getDeclaredConstructors()) {
-                if (match(constructor.getParameterTypes(), types)) {
+        final String key = cache.formatConstructorKey(t, types);
+        Constructor<?> cacheConstructor = cache.getConstructor(key);
+        if (cacheConstructor == null) {
+            if (!cache.contains(key)) {
+                // Try invoking the "canonical" constructor, i.e. the one with exact
+                // matching argument types
+                try {
+                    Constructor<?> constructor = t.getDeclaredConstructor(types);
+                    cache.put(key, constructor);
                     return on(constructor, args);
                 }
-            }
 
-            throw new ReflectException(e);
+                // If there is no exact match, try to find one that has a "similar"
+                // signature if primitive argument types are converted to their wrappers
+                catch (NoSuchMethodException e) {
+                    for (Constructor<?> constructor : t.getDeclaredConstructors()) {
+                        if (match(constructor.getParameterTypes(), types)) {
+                            cache.put(key, constructor);
+                            return on(constructor, args);
+                        }
+                    }
+                    cache.put(key, null);
+                    throw new ReflectException(e);
+                }
+            } else {
+                throw new ReflectException(new NoSuchMethodException("cache method not found!!!!"));
+            }
         }
+        return on(cacheConstructor, args);
     }
 
     /**
@@ -781,23 +834,28 @@ public class Reflect {
      * @see Class#forName(String)
      */
     private static Class<?> forName(String name, ClassLoader classLoader) throws ReflectException {
-        try {
-            ReflectCache cache = new ReflectCache(REFLECT_CACHED);
-            final String key = cache.formatClassName(name, classLoader);
-            Class<?> classT = cache.getClass(key);
-            if (classT == null) {
-                if (classLoader == null) {
-                    classT = Class.forName(name);
-                } else {
-                    classT = Class.forName(name, true, classLoader);
+        ReflectCache cache = new ReflectCache(REFLECT_CACHED);
+        final String key = cache.formatClassKey(name, classLoader);
+        Class<?> classT = cache.getClass(key);
+        if (classT == null) {
+            if (!cache.contains(key)) {
+                try {
+                    if (classLoader == null) {
+                        classT = Class.forName(name);
+                    } else {
+                        classT = Class.forName(name, true, classLoader);
+                    }
+                    cache.put(key, classT);
+                } catch (Exception e) {
+                    cache.put(key, null);
+                    throw new ReflectException(e);
                 }
-                cache.putClass(key, classT);
+            } else {
+                final Exception exception = new ClassNotFoundException("class " + name + " not found of cache!!!");
+                throw new ReflectException(exception);
             }
-            return classT;
         }
-        catch (Exception e) {
-            throw new ReflectException(e);
-        }
+        return classT;
     }
 
     /**

@@ -1,34 +1,23 @@
 package com.android.test.joor.reflect;
 
 
-import android.text.TextUtils;
+
+import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 class ReflectCache {
+    private static final String TAG = "ReflectCache";
     /**
-     * The cache of class.
+     * The cache of class, constructor, method, field
      */
-    private static final Map<String, Class<?>> sClasses = new HashMap<>();
-
-    /**
-     * The cache of constructor
-     */
-    private static final Map<String, Constructor<?>> sConstructors = new HashMap<>();
-
-    /**
-     * The cache of method
-     */
-    private static final Map<String, Method> sMethods = new HashMap<>();
-
-    /**
-     * The cache of field
-     */
-    private static final Map<String, Field> sFields = new HashMap<>();
+    private static final Map<String, Object> sCache = new ConcurrentHashMap<>(); //HashMap??
 
     /**
      * enable of cache reflect
@@ -41,28 +30,99 @@ class ReflectCache {
     }
 
     public Class<?> getClass(String key) {
-        if (cache) {
-            return sClasses.get(key);
+        final Object obj = get(key);
+        if (obj != null && obj instanceof Class<?>) {
+            return (Class<?>) obj;
         }
         return null;
     }
 
-    public boolean putClass(String key, Class<?> classT) {
-        if (cache && classT != null) {
-            sClasses.put(key, classT);
+    public Constructor<?> getConstructor(String key) {
+        final Object obj = get(key);
+        if (obj != null && obj instanceof Constructor<?>) {
+            return (Constructor<?>) obj;
+        }
+        return null;
+    }
+
+    public Method getMethod(String key) {
+        final Object obj = get(key);
+        if (obj != null && obj instanceof Method) {
+            return (Method) obj;
+        }
+        return null;
+    }
+
+    public Field getField(String key) {
+        final Object obj = get(key);
+        if (obj != null && obj instanceof Field) {
+            return (Field) obj;
+        }
+        return null;
+    }
+
+    public boolean contains(String key) {
+        if (cache) {
+            return sCache.containsKey(key);
+        }
+        return false;
+    }
+
+    private Object get(String key) {
+        if (cache) {
+            return sCache.get(key);
+        }
+        return null;
+    }
+
+    public boolean put(String key, Object reflectObj) {
+        if (cache && reflectObj != null) {
+            sCache.put(key, reflectObj);
             return true;
         }
         return false;
     }
 
-    public String formatClassName(String name, ClassLoader classLoader) {
-        return String.format("%s.%s", name, (classLoader == null ? "" : classLoader.toString()));
+    public String formatClassKey(String name, ClassLoader classLoader) {
+        return String.format("%s%s", (classLoader == null ? "" : (classLoader.toString()) + "."), name);
     }
 
-    public void release() {
-        sClasses.clear();
-        sConstructors.clear();
-        sMethods.clear();
-        sFields.clear();
+    public String formatFieldKey(Class<?> clazz, String name) {
+        return clazz.getName() + "." + name;
+    }
+
+    public String formatMethodKey(Class<?> clazz, String name, Class<?>[] types) {
+        return clazz.getName() + "." + name + "(" + formatArgsKey(types) + ")";
+    }
+
+    public String formatConstructorKey(Class<?> clazz, Class<?>[] types) {
+        return clazz.getName() + "(" + formatArgsKey(types) + ")";
+    }
+
+
+    private static String formatArgsKey(Class<?>[] types) {
+        String paramsKey = "";
+        if (types != null && types.length > 0) {
+            StringBuilder builder = new StringBuilder();
+            for (Class<?> classT : types) {
+                builder.append(classT.getName());
+                builder.append(",");
+            }
+            if (builder.length() > 0) {
+                paramsKey = builder.substring(0, builder.length() - 1);
+            }
+        }
+        return paramsKey;
+    }
+
+
+    public void release(boolean print) {
+        if (print) {
+            Set<String> keys = sCache.keySet();
+            for (String key : keys) {
+                Log.d(TAG, "key: " + key + ", value: " + sCache.get(key));
+            }
+        }
+        sCache.clear();
     }
 }
