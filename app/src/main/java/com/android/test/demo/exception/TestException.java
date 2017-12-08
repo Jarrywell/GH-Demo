@@ -29,7 +29,7 @@ public class TestException {
                 //Log.d(TAG, "read:" + temp);
             }
             Log.d(TAG, "read file size:" + size);
-            return size;
+            return returnSize(size);
         } catch (FileNotFoundException e) {
             Log.d(TAG, "FileNotFoundException!!!", e);
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class TestException {
             e.printStackTrace();
         } finally { //这里会在return之前执行!!!
             size += 10; //so, 这里会改变正常的返回值吗?
-            Log.d(TAG, "read file finally() size: " + size);
+            Log.d(TAG, "read file finally{} size: " + size);
             if (in != null) {
                 try {
                     in.close();
@@ -55,17 +55,25 @@ public class TestException {
         return 0;
     }
 
+    private int returnSize(int size) {
+        Log.d(TAG, "enter returnSize()");
+        return size;
+    }
+
+
     /**
      * 返回值是2!!! [finally块在retrun语句执行执行之后，返回之前执行]
      * @return
      */
-    public int test() {
+    public int testFinally1() {
         int x = 1;
         try {
             ++x;
-            return x;
+            Log.d(TAG, "try{} x: " + x);
+            return returnSize(x);
         } finally { //finally块在retrun语句执行执行之后，返回之前执行
             ++x;
+            Log.d(TAG, "finally{} x: " + x);
         }
     }
 

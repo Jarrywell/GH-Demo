@@ -1,5 +1,6 @@
 package com.android.test.demo;
 
+import com.android.test.demo.behavior.TestDAG;
 import com.android.test.demo.exception.TestException;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
@@ -50,11 +51,14 @@ public class MainActivity extends AppCompatActivity {
         TestException testException = new TestException();
 
         final String fileName = "/sdcard/img_h5.txt";
-        //final int size = testException.readValueFromFile(fileName);
-        final int size = testException.readValueFromFile(null);
+        final int size = testException.readValueFromFile(fileName);
+        //final int size = testException.readValueFromFile(null);
         Log.d(TAG, "readValueFromFile return size: " + size);
 
         Map<String, String> map = testException.testFinally2();
         Log.d(TAG, "testFinally2 map: " + (map != null ? map.get("key") : "null"));
+
+        final int value = testException.testFinally1();
+        Log.d(TAG, "testFinally1 return size: " + value);
     }
 }

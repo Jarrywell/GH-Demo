@@ -28,30 +28,37 @@ public class TestDAG {
         DAG.addNode("H");
         DAG.addNode("E");
         DAG.addNode("F");
+        DAG.addNode("J");
+        DAG.addNode("K");
 
-        DAG.addEdge("B", "A");
-        DAG.addEdge("C", "A");
-        DAG.addEdge("D", "B");
-        DAG.addEdge("E", "B");
-        DAG.addEdge("E", "C");
+        DAG.addEdge("A", "B");
+        DAG.addEdge("B", "G");
+        DAG.addEdge("C", "B");
+        DAG.addEdge("C", "H");
+        DAG.addEdge("D", "A");
+        DAG.addEdge("D", "C");
+        DAG.addEdge("E", "D");
+        DAG.addEdge("E", "J");
+        DAG.addEdge("E", "K");
+        DAG.addEdge("E", "F");
         DAG.addEdge("F", "C");
-        DAG.addEdge("G", "D");
-        DAG.addEdge("G", "E");
-        DAG.addEdge("H", "E");
-        DAG.addEdge("H", "F");
-        DAG.addEdge("I", "G");
+        DAG.addEdge("F", "I");
+        DAG.addEdge("H", "G");
         DAG.addEdge("I", "H");
+        DAG.addEdge("J", "D");
+        DAG.addEdge("K", "F");
+
 
         //DAG.addEdge("A", "I"); //增加环形依赖
 
         final int size = DAG.size();
         Log.d(TAG, "DAG size: " + size);
 
-        List<String> incomingEdges = DAG.getIncomingEdges("I");
-        Log.d(TAG, "node I, incomming: " + formatList(incomingEdges));
+        List<String> incomingEdges = DAG.getIncomingEdges("E");
+        Log.d(TAG, "node E, incomming: " + formatList(incomingEdges));
 
-        List<String> outgoingEdges = DAG.getOutgoingEdges("E");
-        Log.d(TAG, "node E, outgoings: " + formatList(outgoingEdges));
+        List<String> outgoingEdges = DAG.getOutgoingEdges("C");
+        Log.d(TAG, "node C, outgoings: " + formatList(outgoingEdges));
 
         List<String> sortList = DAG.getSortedList();
         Log.d(TAG, "sortList: " + formatList(sortList));
