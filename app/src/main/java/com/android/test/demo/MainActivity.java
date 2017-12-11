@@ -60,5 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         final int value = testException.testFinally1();
         Log.d(TAG, "testFinally1 return size: " + value);
+
+        testException.testGHException();
     }
 }

@@ -95,4 +95,22 @@ public class TestException {
         }
         return result;
     }
+
+    public void testGHException() {
+        try {
+            String value = "test";
+            value = null;
+            final String sub = value.substring(0, 1);
+        } catch (NullPointerException e) {
+            throw new TestGHException("string value == null", e);
+        }
+    }
+
+    /*
+    public void testGHException() {
+        String value = "test";
+        value = null;
+        final String sub = value.substring(0, 1);
+    }
+    */
 }
