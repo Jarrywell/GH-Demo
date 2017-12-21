@@ -37,13 +37,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //测试异常
-        testException();
+        //testException();
 
         //测试DAG
-        //TestDAG testDAG = new TestDAG();
+        TestDAG testDAG = new TestDAG();
         //testDAG.test1();
         //testDAG.test2();
         //testDAG.test3();
+        testDAG.test6();
     }
 
 

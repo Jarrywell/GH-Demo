@@ -1,5 +1,9 @@
 package com.android.test.demo.behavior;
 
+import com.google.common.graph.GraphBuilder;
+import com.google.common.graph.MutableGraph;
+import com.google.common.graph.Traverser;
+
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
@@ -47,6 +51,7 @@ public class TestDAG {
         DAG.addEdge("I", "H");
         DAG.addEdge("J", "D");
         DAG.addEdge("K", "F");
+        //DAG.addEdge("C", "G");
 
 
         //DAG.addEdge("A", "I"); //增加环形依赖
@@ -64,7 +69,64 @@ public class TestDAG {
         Log.d(TAG, "sortList: " + formatList(sortList));
     }
 
+    public void test6() {
+        MutableGraph<String> DAG = GraphBuilder.directed().build();
+        DAG.addNode("A");
+        DAG.addNode("I");
+        DAG.addNode("C");
+        DAG.addNode("B");
+        DAG.addNode("G");
+        DAG.addNode("D");
+        DAG.addNode("H");
+        DAG.addNode("E");
+        DAG.addNode("F");
+        DAG.addNode("J");
+        DAG.addNode("K");
+
+        DAG.putEdge("G", "B");
+        DAG.putEdge("G", "H");
+        DAG.putEdge("B", "A");
+        DAG.putEdge("B", "C");
+        DAG.putEdge("H", "C");
+        DAG.putEdge("H", "I");
+        DAG.putEdge("A", "D");
+        DAG.putEdge("C", "D");
+        DAG.putEdge("C", "F");
+        DAG.putEdge("I", "F");
+        DAG.putEdge("D", "J");
+        DAG.putEdge("D", "E");
+        DAG.putEdge("F", "E");
+        DAG.putEdge("F", "K");
+        DAG.putEdge("J", "E");
+        DAG.putEdge("K", "E");
+        //DAG.putEdge("C", "G");
+
+        final int size = DAG.nodes().size();
+        Log.d(TAG, "DAG size: " + size);
+
+        Set<String> incomingEdges = DAG.predecessors("E");
+        Log.d(TAG, "node E, incomming: " + formatList(incomingEdges));
+
+        Set<String> outgoingEdges = DAG.successors("C");
+        Log.d(TAG, "node C, outgoings: " + formatList(outgoingEdges));
+
+        Iterable<String> dfs = Traverser.forGraph(DAG).depthFirstPostOrder("G");
+        for (String value : dfs) {
+            Log.d(TAG, "value: " + value);
+        }
+    }
+
+
     private String formatList(List<String> list) {
+        StringBuilder builder = new StringBuilder();
+        for (String value : list) {
+            builder.append(value);
+            builder.append(",");
+        }
+        return builder.toString();
+    }
+
+    private String formatList(Set<String> list) {
         StringBuilder builder = new StringBuilder();
         for (String value : list) {
             builder.append(value);
