@@ -2,6 +2,7 @@ package com.android.test.demo;
 
 import com.android.test.demo.behavior.TestDAG;
 import com.android.test.demo.exception.TestException;
+import com.android.test.demo.graph.GraphDemo;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -40,11 +41,13 @@ public class MainActivity extends AppCompatActivity {
         //testException();
 
         //测试DAG
-        TestDAG testDAG = new TestDAG();
+        //TestDAG testDAG = new TestDAG();
         //testDAG.test1();
         //testDAG.test2();
         //testDAG.test3();
-        testDAG.test6();
+        //testDAG.test6();
+
+        GraphDemo.testGraphs();
     }
 
 
