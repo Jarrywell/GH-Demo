@@ -162,13 +162,14 @@ public class GraphDemo {
 
         Log.d(TAG, "initlized graph1: " + graph1);
 
+        graph1.putEdgeValue(N3, N1, E31);
+        graph1.putEdgeValue(N3, N4, E34);
+        graph1.putEdgeValue(N4, N4, E44);
         graph1.putEdgeValue(N1, N1, E11);
         graph1.putEdgeValue(N1, N2, E12);
         graph1.putEdgeValue(N2, N1, E21);
         graph1.putEdgeValue(N1, N3, E13);
-        graph1.putEdgeValue(N3, N1, E31);
-        graph1.putEdgeValue(N3, N4, E34);
-        graph1.putEdgeValue(N4, N4, E44);
+
 
         Set<Integer> nodes = graph1.nodes(); //返回图中所有的节点(顺序依赖nodeOrder)
         Log.d(TAG, "graph1 nodes count:" + nodes.size() + ", nodes value:" + format(nodes));
@@ -266,16 +267,17 @@ public class GraphDemo {
 
         Log.d(TAG, "initlized network1: " + network1);
 
+        network1.addEdge(N1, N3, E13);
+        network1.addEdge(N3, N1, E31);
+        network1.addEdge(N3, N4, E34);
+        network1.addEdge(N4, N4, E44);
         network1.addEdge(N1, N1, E11);
         network1.addEdge(N1, N1, E11_A);
         network1.addEdge(N1, N2, E12);
         network1.addEdge(N1, N2, E12_A);
         network1.addEdge(N1, N2, E12_B);
         network1.addEdge(N2, N1, E21);
-        network1.addEdge(N1, N3, E13);
-        network1.addEdge(N3, N1, E31);
-        network1.addEdge(N3, N4, E34);
-        network1.addEdge(N4, N4, E44);
+
 
 
         Set<Integer> nodes = network1.nodes(); //返回图中所有的节点(顺序依赖nodeOrder)
