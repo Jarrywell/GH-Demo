@@ -73,13 +73,16 @@ public class GraphDemo {
         graph1.addNode(N4);
 
         Set<Integer> nodes = graph1.nodes(); //返回图中所有的节点(顺序依赖nodeOrder)
-        Log.d(TAG, "graph1 nodes count:" + nodes.size() + ", nodes value:" + format(nodes));
+        Log.d(TAG, "graph1 nodes count:" + nodes.size()
+                + ", nodes value:" + format(nodes));
 
         Set<EndpointPair<Integer>> edges = graph1.edges();
-        Log.d(TAG, "graph1 edge count:" + edges.size() + ", edges value:" + format(edges));
+        Log.d(TAG, "graph1 edge count:" + edges.size()
+                + ", edges value:" + format(edges));
 
         Set<Integer> predecessors = graph1.predecessors(N2);
-        Log.d(TAG, "graph1 node:" + N2 + " predecessors:" + format(predecessors));
+        Log.d(TAG, "graph1 node:" + N2 +
+                " predecessors:" + format(predecessors));
 
         graph1.putEdge(N2, N4); //增加一条边
         Set<Integer> successors = graph1.successors(N2);
@@ -96,9 +99,9 @@ public class GraphDemo {
 
         //判断顶点连通性
         final boolean connecting23 = graph1.hasEdgeConnecting(N2, N3);
-        final boolean connecting34 = graph1.hasEdgeConnecting(N3, N4);
+        final boolean connecting14 = graph1.hasEdgeConnecting(N1, N4);
         Log.d(TAG, "graph1 node " + N2 + " & " + N3 + " connecting: " + connecting23
-            + ", node " + N3 + " & " + N4 + " connecting: " + connecting34);
+            + ", node " + N1 + " & " + N4 + " connecting: " + connecting14);
 
         //转换成不可变graph
         ImmutableGraph<Integer> immutableGraph = ImmutableGraph.copyOf(graph1);
@@ -157,7 +160,7 @@ public class GraphDemo {
         MutableValueGraph<Integer, String> graph1 = ValueGraphBuilder.directed()
             .allowsSelfLoops(true)
             .expectedNodeCount(NODE_COUNT)
-            .nodeOrder(ElementOrder.<Integer>natural())
+            .nodeOrder(ElementOrder.<Integer>insertion())
             .build();
 
         Log.d(TAG, "initlized graph1: " + graph1);
@@ -170,6 +173,7 @@ public class GraphDemo {
         graph1.putEdgeValue(N2, N1, E21);
         graph1.putEdgeValue(N1, N3, E13);
 
+        Log.d(TAG, "put edges after graph1: " + graph1);
 
         Set<Integer> nodes = graph1.nodes(); //返回图中所有的节点(顺序依赖nodeOrder)
         Log.d(TAG, "graph1 nodes count:" + nodes.size() + ", nodes value:" + format(nodes));
@@ -253,19 +257,21 @@ public class GraphDemo {
         Set<EndpointPair<Integer>> edges4 = graph4.edges();
         Log.d(TAG, "graph4 edge count:" + edges4.size() + ", edges value:" + format(edges4));
 
+        Graph<Integer> graph5 = graph1.asGraph();
+        Log.d(TAG, "asGraph:" + graph5);
+
     }
 
     private static void testNetwork() {
         MutableNetwork<Integer, String> network1 = NetworkBuilder.directed() //有向网
             .allowsParallelEdges(true) //允许并行边
             .allowsSelfLoops(true) //允许自环
-            .nodeOrder(ElementOrder.<Integer>natural()) //节点顺序
-            .edgeOrder(ElementOrder.<String>natural()) //边顺序
+            .nodeOrder(ElementOrder.<Integer>insertion()) //节点顺序
+            .edgeOrder(ElementOrder.<String>insertion()) //边顺序
             .expectedNodeCount(NODE_COUNT) //期望节点数
             .expectedEdgeCount(EDGE_COUNT) //期望边数
             .build();
 
-        Log.d(TAG, "initlized network1: " + network1);
 
         network1.addEdge(N1, N3, E13);
         network1.addEdge(N3, N1, E31);
@@ -278,7 +284,7 @@ public class GraphDemo {
         network1.addEdge(N1, N2, E12_B);
         network1.addEdge(N2, N1, E21);
 
-
+        Log.d(TAG, "add edges after network1: " + network1);
 
         Set<Integer> nodes = network1.nodes(); //返回图中所有的节点(顺序依赖nodeOrder)
         Log.d(TAG, "network1 nodes count:" + nodes.size() + ", nodes value:" + format(nodes));
