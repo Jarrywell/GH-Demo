@@ -1,8 +1,7 @@
 package com.android.test.demo;
 
-import com.android.test.demo.behavior.TestDAG;
 import com.android.test.demo.exception.TestException;
-import com.android.test.demo.graph.GraphDemo;
+import com.android.test.demo.graph.CriticalPath;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -47,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
         //testDAG.test3();
         //testDAG.test6();
 
-        GraphDemo.testGraphs();
+        //GraphDemo.testGraphs();
+
+        CriticalPath.testCirticalPath();
+
     }
 
 
