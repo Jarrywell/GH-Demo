@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         //GraphDemo.testGraphs();
 
-        CriticalPath.testCirticalPath();
+        CriticalPath.test();
 
     }
 
