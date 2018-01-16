@@ -3,6 +3,7 @@ package com.android.test.demo;
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.graph.CriticalPath;
 import com.android.test.demo.graph.Dijkstra;
+import com.android.test.demo.graph.Floyd;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         //GraphDemo.testGraphs();
 
         //CriticalPath.test();
-        Dijkstra.test();
+        //Dijkstra.test();
+        Floyd.test();
     }
 
 

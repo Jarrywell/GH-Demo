@@ -93,7 +93,7 @@ public class Dijkstra {
              */
             if (minExtra != null) {
                 minExtra.visited = true;
-                minExtra.path =nodeExtras.get(minExtra.preNode).path + " -> " + minExtra.nodeName;
+                minExtra.path = nodeExtras.get(minExtra.preNode).path + " -> " + minExtra.nodeName;
                 current = minExtra;
             }
 
@@ -101,7 +101,7 @@ public class Dijkstra {
              * 并入新查找到的节点后，更新与其相关节点的最短路径中间结果
              * if (D[j] + arcs[j][k] < D[k]) D[k] = D[j] + arcs[j][k]
              */
-            Set<String> successors = graph.successors(current.nodeName);
+            Set<String> successors = graph.successors(current.nodeName); //只需循环当前节点的后继列表即可
             for (String notVisitedNode : successors) {
                 NodeExtra extra = nodeExtras.get(notVisitedNode);
                 if (!extra.visited) {
