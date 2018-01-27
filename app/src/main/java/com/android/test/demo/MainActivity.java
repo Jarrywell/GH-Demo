@@ -4,6 +4,7 @@ import com.android.test.demo.exception.TestException;
 import com.android.test.demo.graph.CriticalPath;
 import com.android.test.demo.graph.Dijkstra;
 import com.android.test.demo.graph.Floyd;
+import com.android.test.demo.graph.Kruskal;
 import com.android.test.demo.graph.Prim;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         //CriticalPath.test();
         //Dijkstra.test();
         //Floyd.test();
-        Prim.test();
+        //Prim.test();
+        Kruskal.test();
     }
 
 
