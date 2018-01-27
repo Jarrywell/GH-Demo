@@ -73,8 +73,15 @@ public class Kruskal {
          * 按增序遍历图中所有边
          */
         for (EndpointPair<String> edge : edges) {
+            /*Log.i(TAG, edge.nodeU() + " ->" + edge.nodeV() + " = "
+                    + graph.edgeValueOrDefault(edge.nodeU(), edge.nodeV(), 0));*/
+
+            /**
+             * 获取两个节点所代表的连通分量的sn值
+             */
             final int nodeUSn = vest.get(edge.nodeU());
             final int nodeVSn = vest.get(edge.nodeV());
+
             /**
              * 判断一条边的两个顶点是否对应不同的连通分量。若不相同，则将该边加入最小生成树的图中
              */
@@ -84,8 +91,8 @@ public class Kruskal {
                 Log.i(TAG, edge.nodeU() + " ->" + edge.nodeV() + ": " + value);
 
                 /**
-                 * 更新加入最小生成树中边对应的整个连通分量的sn值（后一个连通分量并入前一个连通分量），
-                 * 以此作为下一次遍历的依据
+                 * 更新加入最小生成树中边对应的整个连通分量的sn值（后一个连通分量并入
+                 * 前一个连通分量），以此作为下一次遍历的依据
                  */
                 for (String node : vest.keySet()) {
                     if (vest.get(node) == nodeVSn) {
@@ -106,6 +113,9 @@ public class Kruskal {
     private static List<EndpointPair<String>> sortEdges(final ValueGraph<String, Integer> graph) {
         List<EndpointPair<String>> edges = new ArrayList<>();
         edges.addAll(graph.edges());
+        /**
+         * 使用Collections的sort函数进行排序，compare()比较的是边权值
+         */
         Collections.sort(edges, new Comparator<EndpointPair<String>>() {
             @Override
             public int compare(EndpointPair<String> endPoint1,
