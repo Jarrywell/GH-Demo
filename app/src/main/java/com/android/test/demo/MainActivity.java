@@ -6,6 +6,7 @@ import com.android.test.demo.graph.Dijkstra;
 import com.android.test.demo.graph.Floyd;
 import com.android.test.demo.graph.Kruskal;
 import com.android.test.demo.graph.Prim;
+import com.android.test.demo.graph.TestTraverser;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -56,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
         //Dijkstra.test();
         //Floyd.test();
         //Prim.test();
-        Kruskal.test();
+        //Kruskal.test();
+
+        TestTraverser.test();
     }
 
 
