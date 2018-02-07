@@ -3,10 +3,13 @@ package com.android.test.demo.lambda;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,7 +39,8 @@ public class TestLambda {
         //testLambda.test8();
         //testLambda.test9();
         //testLambda.test10();
-        testLambda.test11();
+        //testLambda.test11();
+        testLambda.test12();
     }
 
     /**
@@ -233,9 +237,52 @@ public class TestLambda {
             + summary.getAverage() + ", count: " + summary.getCount());
     }
 
+
     private void test11() {
         List<String> G7 = Arrays.asList("USA", "Japan", "France", "Germany", "Italy", "U.K.","Canada");
-        Collections.sort(G7, (first, second) -> first.compareTo(second));
+        /**
+         * lambda表达式定义定义
+         */
+        Comparator<String> comparator = (first, second) -> first.length() - second.length();
+        Collections.sort(G7, comparator);
         Log.i(TAG, "sort: " + G7);
+    }
+
+    private void test12() {
+        List<Task> values = new ArrayList<>();
+        values.add(new Task(1, "title 1", 10));
+        values.add(new Task(2, "title 2", 10));
+        values.add(new Task(3, "title 3", 0));
+        values.add(new Task(4, "title 4", 10));
+        values.add(new Task(5, "title 5", 0));
+
+        /**
+         *
+         */
+        //values.stream().filter(value -> value.mValue == 10).forEach(e -> Log.i(TAG, "title: " + e.getTitle()));
+
+        /**
+         * 利用Predicate以及Function过滤满足条件的title
+         */
+        getTitles(values, e -> e.getValue() == 10, e -> e.getTitle()).forEach(e -> Log.i(TAG, "title: " + e));
+
+    }
+
+    /**
+     *
+     * @param task
+     * @param filterTasks:Predicate用来定义对一些条件的检查
+     * @param extractor: Function 需要一个值并返回一个结果
+     * @param <R>
+     * @return
+     */
+    private <R> List<R> getTitles(List<Task> task, Predicate<Task> filterTasks, Function<Task, R> extractor) {
+        List<R> titles = new ArrayList();
+        task.forEach(e -> {
+            if (filterTasks.test(e)) {
+                titles.add(extractor.apply(e));
+            }
+        });
+        return titles;
     }
 }
