@@ -69,4 +69,8 @@ public class Task {
         return mId == ((Task) obj).getId();
     }
 
+    @Override
+    public String toString() {
+        return mTitle;
+    }
 }

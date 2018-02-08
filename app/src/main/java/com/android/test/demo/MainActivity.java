@@ -7,6 +7,7 @@ import com.android.test.demo.graph.Floyd;
 import com.android.test.demo.graph.Kruskal;
 import com.android.test.demo.graph.Prim;
 import com.android.test.demo.graph.TestTraverser;
+import com.android.test.demo.lambda.TestCollector;
 import com.android.test.demo.lambda.TestLambda;
 import com.android.test.demo.lambda.TestStream;
 import com.android.test.joor.TestJOOR;
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         //TestLambda.test(this);
 
-        TestStream.test();
-
+        //TestStream.test();
+        TestCollector.test();
     }
 
 
