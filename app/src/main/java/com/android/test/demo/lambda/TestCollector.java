@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * des:
@@ -175,7 +176,7 @@ public class TestCollector {
     }
 
     /**
-     * 将task列表，按value和id排序
+     * 将task列表，按value和id分组
      */
     private void test9() {
         List<Task> values = getTasks();
