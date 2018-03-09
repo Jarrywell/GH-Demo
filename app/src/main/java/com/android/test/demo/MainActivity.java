@@ -8,6 +8,7 @@ import com.android.test.demo.graph.Kruskal;
 import com.android.test.demo.graph.Prim;
 import com.android.test.demo.graph.TestTraverser;
 import com.android.test.demo.lambda.TestCollector;
+import com.android.test.demo.lambda.TestForkJoinPool;
 import com.android.test.demo.lambda.TestFunction;
 import com.android.test.demo.lambda.TestLambda;
 import com.android.test.demo.lambda.TestStream;
@@ -69,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         //TestStream.test();
         //TestCollector.test();
-        TestFunction.test();
+        //TestFunction.test();
+
+        TestForkJoinPool.test();
     }
 
 
