@@ -3,8 +3,8 @@ package com.android.test.demo.lambda;
 import android.util.Log;
 
 import java.util.Arrays;
-import java.util.IllegalFormatException;
 import java.util.Random;
+import java.util.StringJoiner;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
@@ -76,28 +76,30 @@ public class TestForkJoinPool {
     }
 
     private void testSortTask() {
-        final int count = 500;
+        final int count = 200;
         int[] array = new int[count];
         final Random random = new Random();
         StringBuilder builder = new StringBuilder("");
         for (int i = 0; i < count; i++) {
-            array[i] = random.nextInt(200);
+            array[i] = random.nextInt(500);
             builder.append(array[i]).append(",");
         }
         Log.i(TAG, "start: " + builder.toString());
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        SortTask task = new SortTask(array, 0, array.length);
+        SortTask task = new SortTask(array);
         Future<int[]> result = forkJoinPool.submit(task);
         try {
             /**
              * 获取子任务的结果，注意如果task是带返回值时, get()会阻塞值到运算出结果
              */
             Log.i(TAG, "Future.get() before");
-            int[] sortResult = result.get();
+            int[] resultArray = result.get();
             Log.i(TAG, "Future.get() after: " + task.isCompletedAbnormally());
-            StringBuilder sortBuilder = new StringBuilder("");
+            StringJoiner sortBuilder = new StringJoiner(",", "{", "}");
+            //StringBuilder sortBuilder = new StringBuilder();
             for (int i = 0; i < count; i++) {
-                sortBuilder.append(sortResult[i]).append(",");
+                sortBuilder.add(resultArray[i] + "");
+                //sortBuilder.append(resultArray[i] + ",");
             }
             Log.i(TAG, "end: " + sortBuilder.toString());
         } catch (Exception e) {
@@ -194,7 +196,11 @@ public class TestForkJoinPool {
     private class SortTask extends RecursiveTask<int[]> {
         private int[] array;
         private int start, end;
-        public SortTask(int[] array, int start, int end) {
+
+        public SortTask(int[] array) {
+            this(array, 0, array.length - 1);
+        }
+        private SortTask(int[] array, int start, int end) {
             this.array = array;
             this.start = start;
             this.end = end;
@@ -203,22 +209,41 @@ public class TestForkJoinPool {
         @Override
         protected int[] compute() {
             if (end - start < THREAD_COUNT) {
-                Arrays.sort(array, start, end);  //模拟小任务排序
-                return array;
+                Arrays.sort(array, start, end + 1);  //模拟小任务排序
             } else {
-                final int mid = (start + end) / 2;
-                SortTask left = new SortTask(array, start, mid);
-                left.fork();
+                final int pivot = partition(array, start, end);
+                SortTask left = new SortTask(array, start, pivot - 1);
+                SortTask right = new SortTask(array, pivot + 1, end);
+                invokeAll(left, right);
+            }
+            return array;
+        }
 
-                SortTask right = new SortTask(array, mid, end);
-                right.fork();
+        /**
+         * 快排思想
+         * @param array
+         * @param start
+         * @param end
+         * @return
+         */
+        private int partition(int array[], int start, int end) {
+            int value = array[end];
+            int index = start - 1;
+            for (int i = start; i < end; i++) {
+                if (array[i] < value) {
+                    index++;
+                    swap(array, index, i);
+                }
+            }
+            swap(array, index + 1, end);
+            return index + 1;
+        }
 
-                left.join();
-                right.join();
-
-                Arrays.sort(array, start, end); //模拟合并后两个数组排序
-
-                return array;
+        private void swap(int[] array, int from, int to) {
+            if (from != to) {
+                int value = array[from];
+                array[from] = array[to];
+                array[to] = value;
             }
         }
     }
