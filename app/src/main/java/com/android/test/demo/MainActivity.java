@@ -7,6 +7,7 @@ import com.android.test.demo.graph.Floyd;
 import com.android.test.demo.graph.Kruskal;
 import com.android.test.demo.graph.Prim;
 import com.android.test.demo.graph.TestTraverser;
+import com.android.test.demo.lambda.StreamOpFlag;
 import com.android.test.demo.lambda.TestCollector;
 import com.android.test.demo.lambda.TestForkJoinPool;
 import com.android.test.demo.lambda.TestFunction;
@@ -72,7 +73,14 @@ public class MainActivity extends AppCompatActivity {
         //TestCollector.test();
         //TestFunction.test();
 
-        TestForkJoinPool.test();
+        //TestForkJoinPool.test();
+
+        final int flag = StreamOpFlag.STREAM_MASK;
+        Log.i(TAG, "spliterator: 0b" + Integer.toBinaryString(flag) + ", not 0b" + Integer.toBinaryString(flag << 1));
+
+        /*final int distinctSet = StreamOpFlag.SHORT_CIRCUIT.set();
+        final int mask = StreamOpFlag.getMask(distinctSet);
+        Log.i(TAG, "flag: 0b" + Integer.toBinaryString(distinctSet) + ", mask: 0b" + Integer.toBinaryString(mask));*/
     }
 
 
