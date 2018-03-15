@@ -1,18 +1,7 @@
 package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
-import com.android.test.demo.graph.CriticalPath;
-import com.android.test.demo.graph.Dijkstra;
-import com.android.test.demo.graph.Floyd;
-import com.android.test.demo.graph.Kruskal;
-import com.android.test.demo.graph.Prim;
-import com.android.test.demo.graph.TestTraverser;
-import com.android.test.demo.lambda.StreamOpFlag;
-import com.android.test.demo.lambda.TestCollector;
-import com.android.test.demo.lambda.TestForkJoinPool;
-import com.android.test.demo.lambda.TestFunction;
-import com.android.test.demo.lambda.TestLambda;
-import com.android.test.demo.lambda.TestStream;
+import com.android.test.demo.state.Hsm2;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -75,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
         //TestForkJoinPool.test();
 
-        final int flag = StreamOpFlag.STREAM_MASK;
-        Log.i(TAG, "spliterator: 0b" + Integer.toBinaryString(flag) + ", not 0b" + Integer.toBinaryString(flag << 1));
+        /*final int flag = StreamOpFlag.STREAM_MASK;
+        Log.i(TAG, "spliterator: 0b" + Integer.toBinaryString(flag) + ", not 0b" + Integer.toBinaryString(flag << 1));*/
 
         /*final int distinctSet = StreamOpFlag.SHORT_CIRCUIT.set();
         final int mask = StreamOpFlag.getMask(distinctSet);
         Log.i(TAG, "flag: 0b" + Integer.toBinaryString(distinctSet) + ", mask: 0b" + Integer.toBinaryString(mask));*/
+
+        //Hsm1.test();
+        Hsm2.test();
     }
 
 
