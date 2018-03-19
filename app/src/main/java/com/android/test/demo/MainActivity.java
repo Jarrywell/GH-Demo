@@ -2,6 +2,8 @@ package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.state.Hsm2;
+import com.android.test.demo.state.TankStateMachine;
+import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;
 
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), TestLife.class));
+            }
+        });
+        findViewById(R.id.btn_state_machine).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), TankStateManchineActivity.class));
             }
         });
 
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "flag: 0b" + Integer.toBinaryString(distinctSet) + ", mask: 0b" + Integer.toBinaryString(mask));*/
 
         //Hsm1.test();
-        Hsm2.test();
+        //Hsm2.test();
     }
 
 
