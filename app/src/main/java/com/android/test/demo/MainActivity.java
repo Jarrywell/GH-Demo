@@ -2,7 +2,6 @@ package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.state.Hsm2;
-import com.android.test.demo.state.TankStateMachine;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.joor.TestJOOR;
 import com.android.test.life.TestLife;

@@ -16,6 +16,7 @@ public class TankStateMachine extends StateMachine {
     private final int CMD_REMOVE_BASE = BASE_CMD + 3; //卸载基座
     private final int CMD_SETUP_BARREL = BASE_CMD + 4; //安装炮筒
     private final int CMD_REMOVE_BARREL = BASE_CMD + 5; //卸载炮筒
+
     private final int CMD_SETUP_BIG_BARREL = BASE_CMD + 6; //安装大口径炮筒
     private final int CMD_REMOVE_BIG_BARREL = BASE_CMD + 7; //卸载大口径炮筒
     private final int CMD_ADD_MISSILE = BASE_CMD + 8; //装填导弹
@@ -106,7 +107,7 @@ public class TankStateMachine extends StateMachine {
      * 卸载大口径炮筒
       */
     public void removeBigBarrel() {
-        sendMessage(obtainMessage(CMD_SETUP_BIG_BARREL));
+        sendMessage(obtainMessage(CMD_REMOVE_BIG_BARREL));
     }
 
     /**
@@ -172,29 +173,6 @@ public class TankStateMachine extends StateMachine {
 
                     return HANDLED;
                 }
-                case CMD_SETUP_BARREL:
-                case CMD_SETUP_BIG_BARREL:
-                case CMD_ADD_MISSILE:
-                case CMD_LAUNCH_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET: {
-                    //想做上面几件事,都得先去装基座
-                    transitionTo(mBaseSetupStartingState);
-
-                    //然后再让新状态去处理这个Message
-                    deferMessage(msg);
-
-                    return HANDLED;
-                }
-                case CMD_ATTACK:
-                case CMD_REMOVE_BASE:
-                case CMD_REMOVE_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_REMOVE_MISSILE:
-                case CMD_REMOVE_ROCKET: { //不处理
-
-                    return HANDLED;
-                }
                 default: {
                     return NOT_HANDLED;
                 }
@@ -210,12 +188,9 @@ public class TankStateMachine extends StateMachine {
         @Override
         public void enter() {
             log("BaseSetupStartingState.enter()");
-            try {
-                Thread.sleep(500); //模拟基座安装过程
-            } catch (Exception e) {}
 
             //安装完毕后发送安装完成消息
-            sendMessage(obtainMessage(CMD_BASE_SETUP_SUCCESSED));
+            sendMessageDelayed(obtainMessage(CMD_BASE_SETUP_SUCCESSED), 1000);
         }
 
         @Override
@@ -238,26 +213,6 @@ public class TankStateMachine extends StateMachine {
 
                     //最后切换到DefaultState
                     transitionTo(mDefaultState);
-
-                    return HANDLED;
-                }
-                case CMD_ATTACK:
-                case CMD_SETUP_BASE:
-                case CMD_SETUP_BARREL:
-                case CMD_SETUP_BIG_BARREL:
-                case CMD_ADD_MISSILE:
-                case CMD_LAUNCH_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET: {
-
-                    deferMessage(msg);
-
-                    return HANDLED;
-                }
-                case CMD_REMOVE_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_REMOVE_MISSILE:
-                case CMD_REMOVE_ROCKET: {
 
                     return HANDLED;
                 }
@@ -286,14 +241,6 @@ public class TankStateMachine extends StateMachine {
         public boolean processMessage(Message msg) {
             log("BaseSetupFinishedState.processMessage: " + msg.what);
             switch (msg.what) {
-                case CMD_ATTACK:
-                case CMD_ADD_MISSILE:
-                case CMD_LAUNCH_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET: {
-                    deferMessage(msg);
-                    return HANDLED;
-                }
                 case CMD_REMOVE_BASE: {
 
                     transitionTo(mDefaultState);
@@ -312,14 +259,6 @@ public class TankStateMachine extends StateMachine {
 
                     return HANDLED;
                 }
-                case CMD_SETUP_BASE:
-                case CMD_REMOVE_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_REMOVE_MISSILE:
-                case CMD_REMOVE_ROCKET: {
-
-                    return HANDLED;
-                }
                 default:
                     return NOT_HANDLED;
             }
@@ -334,10 +273,7 @@ public class TankStateMachine extends StateMachine {
         @Override
         public void enter() {
             log("BarrelSetupStartingState.enter()");
-            try {
-                Thread.sleep(500); //模拟炮筒安装过程
-            } catch (Exception e) {}
-            sendMessage(obtainMessage(CMD_BARREL_SETUP_SUCCESSED));
+            sendMessageDelayed(obtainMessage(CMD_BARREL_SETUP_SUCCESSED), 1000);
         }
 
         @Override
@@ -355,29 +291,9 @@ public class TankStateMachine extends StateMachine {
 
                     return HANDLED;
                 }
-                case CMD_ATTACK:
-                case CMD_SETUP_BARREL:
-                case CMD_SETUP_BIG_BARREL:
-                case CMD_ADD_MISSILE:
-                case CMD_LAUNCH_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET: {
+                case CMD_REMOVE_BARREL: {
 
-                    deferMessage(msg);
-
-                    return HANDLED;
-                }
-                case CMD_REMOVE_BASE: {
-                    deferMessage(msg);
-
-                    transitionTo(mBaseSetupFinishedState); //先拆除炮筒，即回到基座安装完成状态
-                    return HANDLED;
-                }
-                case CMD_SETUP_BASE:
-                case CMD_REMOVE_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_REMOVE_MISSILE:
-                case CMD_REMOVE_ROCKET: {
+                    transitionTo(mBaseSetupFinishedState);
 
                     return HANDLED;
                 }
@@ -406,23 +322,6 @@ public class TankStateMachine extends StateMachine {
         public boolean processMessage(Message msg) {
             log("BarrelSetupFinishedState.processMessage: " + msg.what);
             switch (msg.what) {
-                case CMD_ATTACK:
-                case CMD_SETUP_BIG_BARREL:
-                case CMD_LAUNCH_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET: {
-
-                    deferMessage(msg);
-
-                    return HANDLED;
-                }
-                case CMD_REMOVE_BASE: {
-                    deferMessage(msg);
-
-                    transitionTo(mBaseSetupFinishedState);
-
-                    return HANDLED;
-                }
                 case CMD_REMOVE_BARREL: {
 
                     transitionTo(mBaseSetupFinishedState);
@@ -431,17 +330,9 @@ public class TankStateMachine extends StateMachine {
                 }
                 case CMD_ADD_MISSILE: {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
                     } catch (Exception e) {}
                     transitionTo(mAddMissileSuccessedState);
-                    return HANDLED;
-                }
-                case CMD_SETUP_BASE:
-                case CMD_SETUP_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_REMOVE_MISSILE:
-                case CMD_REMOVE_ROCKET: {
-
                     return HANDLED;
                 }
                 default:
@@ -454,14 +345,70 @@ public class TankStateMachine extends StateMachine {
      * 大口径炮筒安装中(必须要在基座安装完毕才能进入该状态)
      */
     class BigBarrelSetupStartingState extends State {
+        @Override
+        public void enter() {
+            log("BigBarrelSetupStartingState.enter()");
+            sendMessageDelayed(obtainMessage(CMD_BIGBARREL_SETUP_SUCCESSED), 1000);
+        }
 
+        @Override
+        public void exit() {
+            log("BigBarrelSetupStartingState.exit()");
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            log("BigBarrelSetupStartingState.processMessage: " + msg.what);
+            switch (msg.what) {
+                case CMD_BIGBARREL_SETUP_SUCCESSED: {
+
+                    transitionTo(mBigBarrelSetupFinishedState);
+
+                    return HANDLED;
+                }
+                case CMD_REMOVE_BIG_BARREL: {
+                    transitionTo(mBaseSetupFinishedState);
+                    return HANDLED;
+                }
+                default:
+                    return NOT_HANDLED;
+            }
+        }
     }
 
     /**
      * 大口径炮筒安装完毕(必须要在基座安装完毕才能进入该状态)
      */
     class BigBarrelSetupFinishedState extends State {
+        @Override
+        public void enter() {
+            log("BigBarrelSetupFinishedState.enter()");
+        }
 
+        @Override
+        public void exit() {
+            log("BigBarrelSetupFinishedState.exit()");
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            log("BigBarrelSetupFinishedState.processMessage: " + msg.what);
+            switch (msg.what) {
+                case CMD_REMOVE_BIG_BARREL: {
+                    transitionTo(mBaseSetupFinishedState);
+                    return HANDLED;
+                }
+                case CMD_ADD_ROCKET: {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {}
+                    transitionTo(mAddRocketSuccessedState);
+                    return HANDLED;
+                }
+                default:
+                    return NOT_HANDLED;
+            }
+        }
     }
 
     /**
@@ -498,21 +445,9 @@ public class TankStateMachine extends StateMachine {
                     transitionTo(mBarrelSetupFinishedState);
                     return HANDLED;
                 }
-                case CMD_REMOVE_BASE:
-                case CMD_SETUP_BASE:
-                case CMD_SETUP_BARREL:
-                case CMD_REMOVE_BARREL:
-                case CMD_SETUP_BIG_BARREL:
-                case CMD_REMOVE_BIG_BARREL:
-                case CMD_ADD_MISSILE:
-                case CMD_ADD_ROCKET:
-                case CMD_LAUNCH_ROCKET:
-                case CMD_REMOVE_ROCKET: {
-
-                    return HANDLED;
-                }
+                default:
+                    return NOT_HANDLED;
             }
-            return true;
         }
     }
 
@@ -522,6 +457,39 @@ public class TankStateMachine extends StateMachine {
      */
     class AddRocketSuccessedState extends State {
 
+        @Override
+        public void enter() {
+            log("AddRocketSuccessedState.enter()");
+        }
+
+        @Override
+        public void exit() {
+            log("AddRocketSuccessedState.exit()");
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            log("AddRocketSuccessedState.processMessage: " + msg.what);
+
+            switch (msg.what) {
+                case CMD_ATTACK:
+                case CMD_LAUNCH_ROCKET: {
+                    try {
+                        Thread.sleep(500);
+                    } catch (Exception e) {}
+
+                    transitionTo(mBigBarrelSetupFinishedState);
+
+                    return HANDLED;
+                }
+                case CMD_REMOVE_ROCKET: {
+                    transitionTo(mBigBarrelSetupFinishedState);
+                    return HANDLED;
+                }
+                default:
+                    return NOT_HANDLED;
+            }
+        }
     }
 
 }
