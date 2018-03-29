@@ -1,6 +1,7 @@
 package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
+import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.state.Hsm2;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.joor.TestJOOR;
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Hsm1.test();
         //Hsm2.test();
+
+        MemoryTest.test(this);
     }
 
 

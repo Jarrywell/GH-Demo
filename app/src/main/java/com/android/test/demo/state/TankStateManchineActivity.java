@@ -92,6 +92,21 @@ public class TankStateManchineActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn_remove_missile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTankStateMachine.removeMissile();
+            }
+        });
+
+        findViewById(R.id.btn_remove_rocket).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTankStateMachine.removeRocket();
+            }
+        });
+
+
         findViewById(R.id.btn_launch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -126,6 +126,13 @@ public class TankStateMachine extends StateMachine {
     }
 
     /**
+     * 移除导弹（普通口径炮筒才能装填）
+     */
+    public void removeMissile() {
+        sendMessage(obtainMessage(CMD_REMOVE_MISSILE));
+    }
+
+    /**
      * 发射导弹
       */
     public void launchMissile() {
@@ -137,6 +144,13 @@ public class TankStateMachine extends StateMachine {
       */
     public void addRocket() {
         sendMessage(obtainMessage(CMD_ADD_ROCKET));
+    }
+
+    /**
+     * 移除火箭（大口径炮筒才能装填）
+     */
+    public void removeRocket() {
+        sendMessage(obtainMessage(CMD_REMOVE_ROCKET));
     }
 
     /**
