@@ -3,9 +3,11 @@ package com.android.test.demo.memory;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.Random;
 
 import static android.content.Context.ACTIVITY_SERVICE;
@@ -18,15 +20,23 @@ import static android.content.Context.ACTIVITY_SERVICE;
 public class MemoryTest {
     private final String TAG = "MemoryTest";
     private Context mContext;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Looper mLooper;
+    private Handler mHandler;
 
-    public static void test(Context context) {
-        MemoryTest memory = new MemoryTest(context);
-        memory.test1();
+
+    public MemoryTest(Context context) {
+        mContext = context;
+        HandlerThread thread = new HandlerThread("test memeory");
+        thread.start();
+        mLooper = thread.getLooper();
+        mHandler = new Handler(mLooper);
     }
 
-    private MemoryTest(Context context) {
-        mContext = context;
+    public void release() {
+        if (mLooper != null) {
+            mLooper.quit();
+            Log.i(TAG, "memory release.");
+        }
     }
 
     private void printMemory() {
@@ -106,5 +116,44 @@ public class MemoryTest {
         }, 200);
     }
 
+    public void testWeakRefence() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                KeyValue keyValue = new KeyValue("size", 20);
+                WeakReference<KeyValue> weak = new WeakReference<KeyValue>(keyValue);
+                int count = 0;
+                keyValue = null;
+                while (true) {
+                    if (weak.get() != null) {
+                        count++;
+                        Log.i(TAG, "obj is available!! count: " + count + ", obj: " + weak.get());
 
+                        Runtime.getRuntime().gc();
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new AssertionError();
+                        }
+                        System.runFinalization();
+
+                    } else {
+                        Log.i(TAG, "obj is not available!! count: " + count + ", obj: " + weak.get());
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+
+    private class KeyValue {
+        private String key;
+        private int value;
+
+        public KeyValue(String key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
 }

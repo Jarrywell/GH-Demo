@@ -17,6 +17,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestGH";
+    private MemoryTest mMemeory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         //Hsm1.test();
         //Hsm2.test();
 
-        MemoryTest.test(this);
+        mMemeory = new MemoryTest(this);
+        mMemeory.testWeakRefence();
     }
 
 
@@ -101,5 +104,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "testFinally1 return size: " + value);
 
         testException.testGHException();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mMemeory != null) {
+            mMemeory.release();
+        }
     }
 }
