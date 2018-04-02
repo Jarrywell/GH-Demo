@@ -116,34 +116,37 @@ public class MemoryTest {
         }, 200);
     }
 
+
     public void testWeakRefence() {
+        KeyValue keyValue = new KeyValue("size", 20);
+        WeakReference<KeyValue> weakReference = new WeakReference<KeyValue>(keyValue);
+        Log.i(TAG, "01 weak reference obj: " + weakReference.get());
+
+        keyValue = null;
+
+        gc();
+
+        Log.i(TAG, "02 weak reference obj: " + weakReference.get());
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                KeyValue keyValue = new KeyValue("size", 20);
-                WeakReference<KeyValue> weak = new WeakReference<KeyValue>(keyValue);
-                int count = 0;
-                keyValue = null;
-                while (true) {
-                    if (weak.get() != null) {
-                        count++;
-                        Log.i(TAG, "obj is available!! count: " + count + ", obj: " + weak.get());
 
-                        Runtime.getRuntime().gc();
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            throw new AssertionError();
-                        }
-                        System.runFinalization();
+                gc();
 
-                    } else {
-                        Log.i(TAG, "obj is not available!! count: " + count + ", obj: " + weak.get());
-                        break;
-                    }
-                }
+                Log.i(TAG, "03 weak reference obj: " + weakReference.get());
             }
         });
+    }
+
+    private void gc() {
+        Runtime.getRuntime().gc();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new AssertionError();
+        }
+        System.runFinalization();
     }
 
 
