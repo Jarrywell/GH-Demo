@@ -1,5 +1,7 @@
 package com.android.test.demo.memory;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.lang.ref.ReferenceQueue;
@@ -28,17 +30,11 @@ public class TestRefWatcher {
     }
 
 
-    public void watch() {
-        TestWeakObj obj = new TestWeakObj("test", 100);
-        watch(obj);
-    }
-
     public void watch(Object obj) {
         String key = UUID.randomUUID().toString();
         retainedKeys.add(key);
         final KeyedWeakReference reference = new KeyedWeakReference(obj, key, "test", queue);
         ensureGoneAsync(reference);
-
     }
 
 
@@ -51,10 +47,16 @@ public class TestRefWatcher {
                  return null;
             }
         });
+
     }
 
     private void watchInner(final KeyedWeakReference reference) {
-        Log.i(TAG, "weak obj: " + reference.get());
+
+        /**
+         * 特别注意：这里调试了很久,一直都无法回收对象，差点放弃调试！！
+         * 原因是:打印这条日志时调用了reference.get(),导致了一个强引用存在，于是gc不能回收该对象
+         */
+        //Log.i(TAG, "weak 01 obj: " + reference.get());
 
         removeWeaklyReachableReferences();
 
@@ -62,7 +64,7 @@ public class TestRefWatcher {
 
         removeWeaklyReachableReferences();
 
-        Log.i(TAG, "weak obj: " + reference.get());
+        Log.i(TAG, "weak 02 obj: " + reference.get());
     }
 
     private void removeWeaklyReachableReferences() {
@@ -80,17 +82,6 @@ public class TestRefWatcher {
 
     private boolean gone(KeyedWeakReference reference) {
         return !retainedKeys.contains(reference.key);
-    }
-
-
-    public static class TestWeakObj {
-        private String weakKey;
-        private int weakValue;
-
-        public TestWeakObj(String key, int value) {
-            weakKey = key;
-            weakValue = value;
-        }
     }
 
 }

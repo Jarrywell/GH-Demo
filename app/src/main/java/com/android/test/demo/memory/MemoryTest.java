@@ -23,6 +23,11 @@ public class MemoryTest {
     private Looper mLooper;
     private Handler mHandler;
 
+    /**
+     * 模拟对WeakReference的引用变量
+     */
+    private KeyValue mKeyValue = new KeyValue("size", 20);
+
 
     public MemoryTest(Context context) {
         mContext = context;
@@ -118,23 +123,60 @@ public class MemoryTest {
 
 
     public void testWeakRefence() {
-        KeyValue keyValue = new KeyValue("size", 20);
-        WeakReference<KeyValue> weakReference = new WeakReference<KeyValue>(keyValue);
+
+        /**
+         * 这里不用局部变量，编译器这里会有优化操作
+         */
+        //KeyValue keyValue = new KeyValue("size", 20);
+
+        WeakReference<KeyValue> weakReference = new WeakReference<KeyValue>(mKeyValue);
+
         Log.i(TAG, "01 weak reference obj: " + weakReference.get());
 
-        keyValue = null;
+        /**
+         * 模拟失去引用
+         */
+        mKeyValue = null;
 
+        /**
+         * 无效
+         */
+        try {
+            Thread.sleep(100);
+        } catch (Exception e){}
+
+
+        /**
+         * 此处调用gc()操作，并没有导致mKeyValue被回收（定义WeakReference后，立即gc的场景, 使用sleep()等待也不能）
+         */
         gc();
 
-        Log.i(TAG, "02 weak reference obj: " + weakReference.get());
+        /**
+         * 无效
+         */
+        try {
+            Thread.sleep(100);
+        } catch (Exception e){}
 
+
+        Log.i(TAG, "02 weak reference obj: " + weakReference.get()); //输出不为null!!
+
+        /**
+         * 在post请求中调用gc()时，这里会导致mKeyValue的回收()
+         */
         mHandler.post(new Runnable() {
             @Override
             public void run() {
 
+                /**
+                 * 特别注意：这里调试了很久,一直都无法回收对象，差点放弃调试！！
+                 * 原因是:打印这条日志时调用了reference.get(),导致了一个强引用存在，于是gc不能回收该对象
+                 */
+                //Log.i(TAG, "03 weak reference obj: " + weakReference.get()); //输出不为null
+
                 gc();
 
-                Log.i(TAG, "03 weak reference obj: " + weakReference.get());
+                Log.i(TAG, "04 weak reference obj: " + weakReference.get()); //输出为null!!
             }
         });
     }

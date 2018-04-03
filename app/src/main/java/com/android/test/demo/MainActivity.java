@@ -2,6 +2,7 @@ package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.memory.MemoryTest;
+import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.state.Hsm2;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.joor.TestJOOR;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestGH";
     private MemoryTest mMemeory;
+    private Object mRefWatchObj = new Object();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), TankStateManchineActivity.class));
             }
         });
+
+        findViewById(R.id.btn_test_weakreference).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TestRefWatcher refWatcher = new TestRefWatcher();
+                refWatcher.watch(mRefWatchObj);
+
+                /**
+                 * 重要，模拟取消强引用
+                 */
+                mRefWatchObj = null;
+            }
+        });
+
 
         //测试异常
         //testException();
@@ -84,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         //Hsm1.test();
         //Hsm2.test();
 
+        /**
+         * 内存相关测试
+         */
         mMemeory = new MemoryTest(this);
         mMemeory.testWeakRefence();
     }

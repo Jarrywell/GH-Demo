@@ -31,7 +31,7 @@ public final class ActivityRefWatcher {
       new Application.ActivityLifecycleCallbacks() {
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            //refWatcher.watch(activity);
+            //ActivityRefWatcher.this.onActivityCreated(activity);
         }
 
         @Override
@@ -72,14 +72,12 @@ public final class ActivityRefWatcher {
     this.refWatcher = checkNotNull(refWatcher, "refWatcher");
   }
 
-    void onActivityCreated(Activity activity) {
-        refWatcher.watch(activity);
-        //refWatcher.watch();
-    }
+  void onActivityCreated(Activity activity) {
+    refWatcher.watch(activity);
+  }
 
   void onActivityDestroyed(Activity activity) {
     refWatcher.watch(activity);
-    //refWatcher.watch();
   }
 
   public void watchActivities() {

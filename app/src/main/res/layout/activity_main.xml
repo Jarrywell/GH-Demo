@@ -37,6 +37,15 @@
             android:text="层次状态机（坦克）"
             android:layout_marginBottom="10dp"
             />
+
+        <Button
+            android:id="@+id/btn_test_weakreference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Weak Reference 弱引用测试"
+            android:layout_marginBottom="10dp"
+            />
+
     </LinearLayout>
 
 </ScrollView>
