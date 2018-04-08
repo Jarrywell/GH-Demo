@@ -123,7 +123,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "testFinally1 return size: " + value);
 
         testException.testGHException();
+
     }
+
 
     @Override
     protected void onDestroy() {

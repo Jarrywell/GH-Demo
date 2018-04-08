@@ -45,6 +45,9 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.guava:guava:23.5-android'
 
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.alibaba:fastjson:1.2.9'
+
     compile project(':testjoor')
     compile project(':testlife')
 }
