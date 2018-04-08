@@ -10,32 +10,46 @@ import okhttp3.RequestBody;
  */
 public final class HttpRequestBuilder<T extends HttpResult> {
 
-    private Request.Builder mRequestBuilder;
+    public boolean mainThread;
+    public Request.Builder requestBuilder;
 
     private HttpRequestBuilder(String method, RequestBody body) {
-        mRequestBuilder = new Request.Builder();
-        mRequestBuilder.method(method, body);
+        requestBuilder = new Request.Builder();
+        requestBuilder.method(method, body);
     }
 
     public static <T extends HttpResult> HttpRequestBuilder<T> get() {
-        return new HttpRequestBuilder<T>("GET", null);
+        return new HttpRequestBuilder<>("GET", null);
     }
 
     public static <T extends HttpResult> HttpRequestBuilder<T> post(RequestBody body) {
-        return new HttpRequestBuilder<T>("POST", body);
+        return new HttpRequestBuilder<>("POST", body);
     }
 
-    public HttpRequestBuilder<T> url(String url) {
-        mRequestBuilder.url(url);
-        return this;
+    public <T1 extends T> HttpRequestBuilder<T1> url(String url) {
+        requestBuilder.url(url);
+        HttpRequestBuilder<T1> builder = cast();
+        return builder;
     }
 
-    public HttpRequestBuilder<T> addHeader(String name, String value) {
-        mRequestBuilder.addHeader(name, value);
-        return this;
+    public <T1 extends T> HttpRequestBuilder<T1> mainThread(boolean mainThread) {
+        this.mainThread  = mainThread;
+
+        return cast();
     }
 
-    public HttpRequest<T> build() {
-        return new HttpRequestImp<T>(mRequestBuilder);
+    public <T1 extends T> HttpRequestBuilder<T1> addHeader(String name, String value) {
+        requestBuilder.addHeader(name, value);
+
+        return cast();
+    }
+
+    public <T1 extends T> HttpRequest<T1> build() {
+        return new HttpRequestImp<T1>(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T1 extends T> HttpRequestBuilder<T1> cast() {
+        return (HttpRequestBuilder<T1>) this;
     }
 }

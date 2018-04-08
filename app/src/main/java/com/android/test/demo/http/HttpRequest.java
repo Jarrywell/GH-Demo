@@ -9,6 +9,32 @@ import okhttp3.Request;
  */
 public interface HttpRequest<T extends HttpResult> {
 
+
+    /**
+     *
+     * @param <T>
+     */
+    interface HttpRequestListener<T extends HttpResult> {
+
+
+        /**
+         *
+         * @param request
+         * @param response
+         */
+        void onCompleted(Request request, HttpResponse<T> response);
+
+
+        /**
+         *
+         * @param request
+         * @param httpCode
+         * @param throwable
+         */
+        void onException(Request request, int httpCode, Throwable throwable);
+    }
+
+
     /**
      *
      * @param listener
@@ -23,24 +49,12 @@ public interface HttpRequest<T extends HttpResult> {
     HttpResponse<T> execute();
 
 
+    /**
+     *
+     */
     void cancel();
 
 
-    interface HttpRequestListener<T extends HttpResult> {
 
-        /**
-         *
-         * @param response
-         */
-        void onCompleted(HttpResponse<T> response);
-
-
-        /**
-         *
-         * @param throwable
-         * @param httpCode
-         */
-        void onException(Throwable throwable, int httpCode);
-    }
 
 }

@@ -1,9 +1,6 @@
-package com.android.test.demo.http;
+package com.android.test.demo;
 
-import com.alibaba.fastjson.JSON;
-import com.android.test.joor.Test;
-
-import org.json.JSONObject;
+import com.android.test.demo.http.HttpResult;
 
 /**
  * des:
