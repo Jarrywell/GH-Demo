@@ -1,5 +1,9 @@
 package com.android.test.demo.http;
 
+import com.alibaba.fastjson.JSON;
+
+import com.android.test.demo.http.HttpRequestBuilder.HttpRequestBuilderWrapper;
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -12,6 +16,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+
 /**
  * des:
  * author: libingyan
@@ -19,21 +24,28 @@ import okhttp3.ResponseBody;
  */
 class HttpRequestImp<T extends HttpResult> implements HttpRequest {
     private final String TAG = "HttpRequest";
+
     private static OkHttpClient sOkHttpClient;
-    private HttpRequestBuilder mBuilder;
+    private HttpRequestBuilderWrapper mBuilder;
+    private OkHttpClient.Builder mOKHttpClientBuilder;
+    private Class<T> mResponseClzz;
     private Call mCall;
     private static Handler sHandler = new Handler(Looper.getMainLooper());
 
-    HttpRequestImp(HttpRequestBuilder builder) {
+    HttpRequestImp(HttpRequestBuilderWrapper builder, Class<T> clazz) {
         if (sOkHttpClient == null) {
-            sOkHttpClient = new OkHttpClient.Builder().build();
+            if (mOKHttpClientBuilder == null) {
+                mOKHttpClientBuilder = new OkHttpClient.Builder();
+            }
+            sOkHttpClient = mOKHttpClientBuilder.build();
         }
         mBuilder = builder;
+        mResponseClzz = clazz;
     }
 
     @Override
     public void enqueue(HttpRequestListener listener) {
-        mCall = sOkHttpClient.newCall(mBuilder.requestBuilder.build());
+        mCall = sOkHttpClient.newCall(mBuilder.getBuilder().build());
         mCall.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -49,27 +61,20 @@ class HttpRequestImp<T extends HttpResult> implements HttpRequest {
 
     @Override
     public HttpResponse<T> execute() {
-        mCall = sOkHttpClient.newCall(mBuilder.requestBuilder.build());
+        mCall = sOkHttpClient.newCall(mBuilder.getBuilder().build());
         Response response = null;
         try {
             response = mCall.execute();
         } catch (Exception e) {};
 
-        ResponseBody body = response.body();
-        String content = "";
-        try {
-            content = body.string();
-        } catch (Exception e) {}
-
-        T result = null;
-        return new HttpResponse<T>(result, response);
+        return new HttpResponse<T>(parse(response), response);
     }
 
     private void onCompleted(Call call, Response response, HttpRequestListener listener) {
         Request request = call.request();
-        HttpResponse httpResponse = new HttpResponse(null, response);
+        HttpResponse httpResponse = new HttpResponse(parse(response), response);
 
-        if (!mBuilder.mainThread) {
+        if (!mBuilder.isMainThread()) {
             listener.onCompleted(request, httpResponse);
         } else {
             sHandler.post(new Runnable() {
@@ -81,9 +86,11 @@ class HttpRequestImp<T extends HttpResult> implements HttpRequest {
         }
     }
 
+
+
     private void onException(Call call, IOException e, HttpRequestListener listener) {
         Request request = call.request();
-        if (!mBuilder.mainThread) {
+        if (!mBuilder.isMainThread()) {
             listener.onException(request, 0, e);
         } else {
             sHandler.post(new Runnable() {
@@ -102,4 +109,15 @@ class HttpRequestImp<T extends HttpResult> implements HttpRequest {
             mCall.cancel();
         }
     }
+
+    private T parse(Response response) {
+        ResponseBody body = response.body();
+        String content = "";
+        try {
+            content = body.string();
+        } catch (Exception e) {}
+
+        return JSON.parseObject(content, mResponseClzz);
+    }
+
 }

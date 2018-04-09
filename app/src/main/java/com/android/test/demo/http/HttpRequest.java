@@ -54,7 +54,4 @@ public interface HttpRequest<T extends HttpResult> {
      */
     void cancel();
 
-
-
-
 }
