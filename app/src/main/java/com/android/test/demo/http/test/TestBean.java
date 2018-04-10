@@ -1,4 +1,4 @@
-package com.android.test.demo;
+package com.android.test.demo.http.test;
 
 import com.android.test.demo.http.HttpResult;
 

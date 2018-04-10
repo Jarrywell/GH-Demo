@@ -1,12 +1,13 @@
 package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
+import com.android.test.demo.http.test.TestHttpRequest;
+import com.android.test.demo.joor.test.TestJOOR;
+import com.android.test.demo.life.TestLifeActivity;
+import com.android.test.demo.log.DLog;
 import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
-import com.android.test.demo.state.Hsm2;
 import com.android.test.demo.state.TankStateManchineActivity;
-import com.android.test.joor.TestJOOR;
-import com.android.test.life.TestLife;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -31,14 +32,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_joor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), TestJOOR.class));
+                TestJOOR.test(MainActivity.this);
+                TestJOOR.release();
             }
         });
 
         findViewById(R.id.btn_view_activity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), TestLife.class));
+                startActivity(new Intent(getApplicationContext(), TestLifeActivity.class));
             }
         });
         findViewById(R.id.btn_state_machine).setOnClickListener(new View.OnClickListener() {
@@ -58,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
                  * 重要，模拟取消强引用
                  */
                 mRefWatchObj = null;
+            }
+        });
+
+        findViewById(R.id.btn_test_http).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TestHttpRequest.doGet();
             }
         });
 

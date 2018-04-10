@@ -1,4 +1,4 @@
-package com.android.test.demo;
+package com.android.test.demo.http.test;
 
 import com.android.test.demo.http.HttpRequest;
 import com.android.test.demo.http.HttpRequestBuilder;
@@ -15,9 +15,9 @@ import okhttp3.Request;
  */
 public class TestHttpRequest {
 
-    void doGet() {
+    public static void doGet() {
 
-        HttpRequest<TestBean> request = HttpRequestBuilder.get().url("www.baidu.com")
+        HttpRequest<TestBean> request = HttpRequestBuilder.get().url("http://www.baidu.com")
             .addHeader("a", "value")
             .mainThread(true)
             .build(TestBean.class);
@@ -34,9 +34,9 @@ public class TestHttpRequest {
             }
         });
 
-        HttpResponse<TestBean> result = request.execute();
+        //HttpResponse<TestBean> result = request.execute();
 
-        HttpRequestBuilder.get().url("www.baidu.com")
+        HttpRequestBuilder.get().url("http://www.baidu.com")
             .addHeader("a", "sss")
             .addParam("value", 100)
             .expireTime(24, TimeUnit.HOURS)

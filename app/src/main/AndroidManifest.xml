@@ -3,6 +3,8 @@
     package="com.android.test.demo"
     >
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -19,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".state.TankStateManchineActivity" android:enabled="true"/>
+        <activity android:name=".life.TestLifeActivity" android:enabled="true"/>
     </application>
 
 </manifest>

@@ -1,8 +1,9 @@
-package com.android.test.demo;
+package com.android.test.demo.log;
 
-import com.android.test.joor.reflect.Reflect;
 
 import android.util.Log;
+
+import com.android.test.demo.joor.Reflect;
 
 public class DLog {
 
