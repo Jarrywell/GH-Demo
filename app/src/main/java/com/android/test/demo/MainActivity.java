@@ -7,6 +7,7 @@ import com.android.test.demo.life.TestLifeActivity;
 import com.android.test.demo.log.DLog;
 import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
+import com.android.test.demo.nightmode.NightModeActivity;
 import com.android.test.demo.state.TankStateManchineActivity;
 
 import android.content.Intent;
@@ -70,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn_test_night_mode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NightModeActivity.class));
+            }
+        });
 
         //测试异常
         //testException();

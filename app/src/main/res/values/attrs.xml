@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="testAttrText" format="string"/>
+    <attr name="testAttrColor" format="color"/>
+
+    <attr name="BaseViewTheme" format="reference"/>
+
+    <declare-styleable name="BaseView">
+        <attr name="testText" format="string"/>
+        <attr name="testColor" format="color"/>
+    </declare-styleable>
+</resources>

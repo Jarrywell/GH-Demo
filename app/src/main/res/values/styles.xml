@@ -6,6 +6,21 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="BaseViewTheme">@style/BaseViewAttrOfTheme</item>
     </style>
 
+    <style name="BaseViewAttrOfXml">
+        <item name="testText">通过xml中的style.xml中定义attr属性</item>
+        <item name="testColor">#ff00ff00</item>
+    </style>
+
+    <style name="BaseViewAttrOfTheme">
+        <item name="testText">在主题中指定attr的style作为obtainStyledAttributes的第三个参数</item>
+        <item name="testColor">#ff0000ff</item>
+    </style>
+
+    <style name="BaseViewAttrDefault">
+        <item name="testText">指定一个默认的style作为obtainStyledAttributes的第四个参数</item>
+        <item name="testColor">#ffff00ff</item>
+    </style>
 </resources>
