@@ -3,6 +3,7 @@ package com.android.test.demo.nightmode;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.android.test.demo.R;
 
@@ -18,5 +19,12 @@ public class NightModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_night_mode);
+
+        findViewById(R.id.btn_switch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ThemeUtils.toggleNightMode(NightModeActivity.this);
+            }
+        });
     }
 }

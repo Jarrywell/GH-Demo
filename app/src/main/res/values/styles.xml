@@ -23,4 +23,22 @@
         <item name="testText">指定一个默认的style作为obtainStyledAttributes的第四个参数</item>
         <item name="testColor">#ffff00ff</item>
     </style>
+
+    <style name="TextViewStyleNight">
+        <item name="android:textSize">25dp</item>
+        <item name="android:text">这里是夜间模式测试文字</item>
+        <item name="android:textColor">#ff888888</item>
+    </style>
+
+    <style name="TextViewStyleDay">
+        <item name="android:textSize">20dp</item>
+        <item name="android:text">这里是白天模式测试文字</item>
+        <item name="android:textColor">#ffff0000</item>
+    </style>
+
+    <style name="TextViewStyle">
+        <item name="nightTheme">@style/TextViewStyleNight</item>
+        <item name="dayTheme">@style/TextViewStyleDay</item>
+        
+    </style>
 </resources>

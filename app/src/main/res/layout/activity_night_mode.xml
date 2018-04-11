@@ -12,13 +12,13 @@
 
     <com.android.test.demo.nightmode.test.TestView1
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="30dp"
         app:testAttrText="直接定义的attr属性"
         app:testAttrColor="#ffff0000"/>
 
     <com.android.test.demo.nightmode.test.TestView2
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="30dp"
         style="@style/BaseViewAttrOfXml"/>
 
     <com.android.test.demo.nightmode.test.TestView2
@@ -34,4 +34,16 @@
     <com.android.test.demo.nightmode.test.TestView4
         android:layout_width="match_parent"
         android:layout_height="60dp" />
+
+    <Button
+        android:id="@+id/btn_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="切换主题"/>
+
+    <com.android.test.demo.nightmode.NightTextView
+        android:id="@+id/txt_night"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:DayNightTheme="@style/TextViewStyle" />
 </LinearLayout>
