@@ -26,5 +26,20 @@ public class NightModeActivity extends AppCompatActivity {
                 ThemeUtils.toggleNightMode(NightModeActivity.this);
             }
         });
+
+        NightImageView imageView = (NightImageView) findViewById(R.id.img_nightmode);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String state = imageView.getCurrentSrc();
+                if (state == null) {
+                    imageView.setCurrentSrc("on");
+                } else if (state.equals("on")) {
+                    imageView.setCurrentSrc("off");
+                } else {
+                    imageView.setCurrentSrc("on");
+                }
+            }
+        });
     }
 }

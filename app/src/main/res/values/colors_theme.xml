@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="image_mask_default_night">#7f000000</color>
+
+    <!--<color name="bg_day_color">#ffffffff</color>-->
+    <color name="bg_day_color">#00ffffff</color>
+    <color name="bg_night_color">#201f26</color>
+
+    <color name="text_day_color">#ff000000</color>
+    <color name="text_night_color">#7fffffff</color>
+
+</resources>

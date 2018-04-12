@@ -27,18 +27,64 @@
     <style name="TextViewStyleNight">
         <item name="android:textSize">25dp</item>
         <item name="android:text">这里是夜间模式测试文字</item>
-        <item name="android:textColor">#ff888888</item>
+        <item name="android:textColor">@color/text_night_color</item>
     </style>
 
     <style name="TextViewStyleDay">
         <item name="android:textSize">20dp</item>
         <item name="android:text">这里是白天模式测试文字</item>
-        <item name="android:textColor">#ffff0000</item>
+        <item name="android:textColor">@color/text_day_color</item>
     </style>
 
     <style name="TextViewStyle">
         <item name="nightTheme">@style/TextViewStyleNight</item>
         <item name="dayTheme">@style/TextViewStyleDay</item>
-        
     </style>
+
+
+    <style name="ImageViewStyleDay">
+        <item name="mask">false</item>
+        <item name="android:src">@drawable/icon_light</item>
+        <item name="android:alpha">1</item>
+    </style>
+
+    <style name="ImageViewStyleNight">
+        <item name="mask">true</item>
+        <item name="android:src">@drawable/icon_dark</item>
+        <item name="android:alpha">0.9</item>
+    </style>
+
+    <style name="ImageViewStyle">
+        <item name="nightTheme">@style/ImageViewStyleNight</item>
+        <item name="dayTheme">@style/ImageViewStyleDay</item>
+    </style>
+
+    <style name="BackgroundStyleDay">
+        <item name="android:background">@color/bg_day_color</item>
+    </style>
+
+    <style name="BackgroundStyleNight">
+        <item name="android:background">@color/bg_night_color</item>
+    </style>
+
+    <style name="BackgroundStyle">
+        <item name="nightTheme">@style/BackgroundStyleNight</item>
+        <item name="dayTheme">@style/BackgroundStyleDay</item>
+    </style>
+
+
+    <style name="NightModeIconStyleDay">
+        <item name="src_sets">@drawable/night_mode_sets_light</item>
+    </style>
+
+    <style name="NightModeIconStyleNight">
+        <item name="src_sets">@drawable/night_mode_sets_dark</item>
+    </style>
+
+    <style name="NightModeIconStyle">
+        <item name="nightTheme">@style/NightModeIconStyleNight</item>
+        <item name="dayTheme">@style/NightModeIconStyleDay</item>
+    </style>
+
+
 </resources>

@@ -4,28 +4,28 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <com.android.test.demo.nightmode.test.TestView1
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        app:testAttrText="直接定义的attr属性"
-        app:testAttrColor="#ffff0000"/>
+        app:testAttrColor="#ffff0000"
+        app:testAttrText="直接定义的attr属性" />
 
     <com.android.test.demo.nightmode.test.TestView2
+        style="@style/BaseViewAttrOfXml"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        style="@style/BaseViewAttrOfXml"/>
+        android:layout_height="30dp" />
 
     <com.android.test.demo.nightmode.test.TestView2
+        style="@style/BaseViewAttrOfXml"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:testText="直接定义的attr属性先于style中定义的属性"
-        style="@style/BaseViewAttrOfXml"/>
+        app:testText="直接定义的attr属性先于style中定义的属性" />
 
     <com.android.test.demo.nightmode.test.TestView3
         android:layout_width="match_parent"
@@ -35,15 +35,39 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
-    <Button
-        android:id="@+id/btn_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="切换主题"/>
 
-    <com.android.test.demo.nightmode.NightTextView
-        android:id="@+id/txt_night"
+    <com.android.test.demo.nightmode.NightLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:DayNightTheme="@style/TextViewStyle" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:DayNightTheme="@style/BackgroundStyle">
+
+        <Button
+            android:id="@+id/btn_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="切换主题" />
+
+        <!--<com.android.test.demo.nightmode.NightImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:DayNightTheme="@style/ImageViewStyle" />-->
+
+        <com.android.test.demo.nightmode.NightImageView
+            android:id="@+id/img_nightmode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:DayNightTheme="@style/NightModeIconStyle"/>
+
+        <com.android.test.demo.nightmode.NightTextView
+            android:id="@+id/txt_night"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            app:DayNightTheme="@style/TextViewStyle" />
+
+    </com.android.test.demo.nightmode.NightLinearLayout>
+
 </LinearLayout>

@@ -9,14 +9,4 @@
         <attr name="testText" format="string"/>
         <attr name="testColor" format="color"/>
     </declare-styleable>
-
-
-    <declare-styleable name="DayNightStyle">
-        <attr name="nightTheme" format="reference"/>
-        <attr name="dayTheme" format="reference"/>
-    </declare-styleable>
-
-    <declare-styleable name="DefaultThemeStyle">
-        <attr name="DayNightTheme" format="reference"/>
-    </declare-styleable>
 </resources>
