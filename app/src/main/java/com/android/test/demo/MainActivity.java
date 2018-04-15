@@ -8,6 +8,7 @@ import com.android.test.demo.log.DLog;
 import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
+import com.android.test.demo.proxy.TestHelloWorld;
 import com.android.test.demo.state.TankStateManchineActivity;
 
 import android.content.Intent;
@@ -119,8 +120,11 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 内存相关测试
          */
-        mMemeory = new MemoryTest(this);
-        mMemeory.testWeakRefence();
+        //mMemeory = new MemoryTest(this);
+        //mMemeory.testWeakRefence();
+
+        TestHelloWorld.test();
+
     }
 
 

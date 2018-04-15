@@ -17,7 +17,7 @@ import java.util.List;
  * Created by tech on 18-4-12.
  */
 
-public final class DrawableItem {
+final class DrawableItem {
     public static final String TAG = "DrawableItem";
 
     public final String name;
