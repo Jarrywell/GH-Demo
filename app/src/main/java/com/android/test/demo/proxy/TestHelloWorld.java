@@ -32,7 +32,7 @@ public class TestHelloWorld {
         }
 
         InvocationHandler handler = new LoggerHandler<>(hw);
-        Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+        IHelloWorld proxy = (IHelloWorld) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 hw.getClass().getInterfaces(), handler);
 
         /**
@@ -42,6 +42,6 @@ public class TestHelloWorld {
         Log.i(TAG, "hw: " + hw);
 
 
-        ((IHelloWorld) proxy).sayHello();
+        proxy.sayHello();
     }
 }

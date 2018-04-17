@@ -61,6 +61,15 @@
             android:text="夜间模式"
             android:layout_marginBottom="10dp"
             />
+
+        <Button
+            android:id="@+id/btn_test_hook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="HOOK"
+            android:layout_marginBottom="10dp"
+            />
+
     </LinearLayout>
 
 </ScrollView>

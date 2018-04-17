@@ -1,6 +1,7 @@
 package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
+import com.android.test.demo.hook.HookActivity;
 import com.android.test.demo.http.test.TestHttpRequest;
 import com.android.test.demo.joor.test.TestJOOR;
 import com.android.test.demo.life.TestLifeActivity;
@@ -76,6 +77,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), NightModeActivity.class));
+            }
+        });
+
+        findViewById(R.id.btn_test_hook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), HookActivity.class));
             }
         });
 

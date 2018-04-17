@@ -23,6 +23,7 @@
         <activity android:name=".state.TankStateManchineActivity" android:enabled="true"/>
         <activity android:name=".life.TestLifeActivity" android:enabled="true"/>
         <activity android:name=".nightmode.NightModeActivity" android:enabled="true"/>
+        <activity android:name=".hook.HookActivity" android:enabled="true"/>
     </application>
 
 </manifest>
