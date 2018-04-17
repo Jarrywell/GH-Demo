@@ -247,9 +247,17 @@ public class Reflect {
         try {
             Field field = field0(name);
             if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
-                Field modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                /**
+                 * android下 Field.class.getDeclaredField("modifiers")此处会一直异常
+                 * 抛出异常: java.lang.NoSuchFieldException: No field modifiers in class Ljava/lang/reflect/Field;
+                 */
+                try {
+                    Field modifiersField = Field.class.getDeclaredField("modifiers");
+                    modifiersField.setAccessible(true);
+                    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                } catch (Exception e) {
+                    field.setAccessible(true);
+                }
             }
             field.set(object, unwrap(value));
             return this;

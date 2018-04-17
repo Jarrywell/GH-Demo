@@ -56,9 +56,9 @@ public class PmsHook {
         Log.i(TAG, "mPM: " + mPM);
 
         /**
-         * private final IPackageManager mPM; //mPM被final掉了，修改时抛出了异常，后续解决
+         * private final IPackageManager mPM; //mPM被final掉了，修改时抛出了异常，后续解决(已解决)
          */
-        //Reflect.on(context.getPackageManager()).set("mPM", proxy);
+        Reflect.on(context.getPackageManager()).set("mPM", proxy);
     }
 
     static class PmsHookHandler implements InvocationHandler {
