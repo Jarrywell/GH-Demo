@@ -255,8 +255,8 @@ public class Reflect {
                     Field modifiersField = Field.class.getDeclaredField("modifiers");
                     modifiersField.setAccessible(true);
                     modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                } catch (Exception e) {
-                    field.setAccessible(true);
+                } catch (NoSuchFieldException e) {
+                    //field.setAccessible(true);
                 }
             }
             field.set(object, unwrap(value));
