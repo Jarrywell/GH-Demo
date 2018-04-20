@@ -24,6 +24,7 @@
         <activity android:name=".life.TestLifeActivity" android:enabled="true"/>
         <activity android:name=".nightmode.NightModeActivity" android:enabled="true"/>
         <activity android:name=".hook.HookActivity" android:enabled="true"/>
+        <activity android:name=".fragment.FragmentActivity" android:enabled="true"/>
     </application>
 
 </manifest>

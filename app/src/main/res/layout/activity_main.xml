@@ -70,6 +70,14 @@
             android:layout_marginBottom="10dp"
             />
 
+        <Button
+            android:id="@+id/btn_test_fragments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fragment"
+            android:layout_marginBottom="10dp"
+            />
+
     </LinearLayout>
 
 </ScrollView>

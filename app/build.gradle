@@ -47,4 +47,6 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.alibaba:fastjson:1.2.9'
+
+    compile 'com.android.support:support-fragment:25.3.1'
 }
