@@ -35,6 +35,20 @@
         android:layout_width="match_parent"
         android:layout_height="60dp" />
 
+    <Button
+        android:id="@+id/btn_sys_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="切换系统夜间主题" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="这里是测试系统主题实现的夜间模式View"
+        android:textSize="15dp"
+        android:background="@color/bg_color"
+        android:textColor="@color/text_color"
+        />
 
     <com.android.test.demo.nightmode.NightLinearLayout
         android:layout_width="match_parent"
@@ -46,7 +60,7 @@
             android:id="@+id/btn_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="切换主题" />
+            android:text="切换夜间模式" />
 
         <!--<com.android.test.demo.nightmode.NightImageView
             android:layout_width="wrap_content"

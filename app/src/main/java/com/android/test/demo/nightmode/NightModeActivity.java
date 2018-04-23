@@ -3,6 +3,7 @@ package com.android.test.demo.nightmode;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.android.test.demo.R;
@@ -17,8 +18,17 @@ public class NightModeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        AppCompatNightMode.initTheme(this);
         setContentView(R.layout.activity_night_mode);
+
+        Log.i(TAG, "onCreate()");
+
+        findViewById(R.id.btn_sys_switch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatNightMode.swtichTheme(NightModeActivity.this);
+            }
+        });
 
         findViewById(R.id.btn_switch).setOnClickListener(new View.OnClickListener() {
             @Override
