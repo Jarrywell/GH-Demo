@@ -1,0 +1,33 @@
+def supportVersion = '27.0.1'
+def okHttpVersion = '3.9.0'
+
+ext {
+    android = [
+            compileSdkVersion: 27,
+            minSdkVersion: 19,
+            targetSdkVersion: 25,
+            buildToolsVersion: '27.0.3',
+            versionCode: 1,
+            versionName: '1.0'
+    ]
+
+    dependencies = [
+            // Required for local unit tests (JUnit 4 framework)
+            "junit": "junit:junit:4.12",
+            "runner": "com.android.support.test:runner:0.5",
+            "espresso": "com.android.support.test.espresso:espresso-core:2.2.2",
+
+            //support
+            "appcompat-v7": "com.android.support:appcompat-v7:${supportVersion}",
+            "support-annotations": "com.android.support:support-annotations:${supportVersion}",
+            "design": "com.android.support:design:${supportVersion}",
+            "fragment": "com.android.support:support-fragment:${supportVersion}",
+
+            //第三方业务基础组建
+            "okhttp": "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            "fastjson": "com.alibaba:fastjson:1.2.9",
+
+            //java
+            "guava": "com.google.guava:guava:23.5-android",
+    ]
+}

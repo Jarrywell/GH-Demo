@@ -1,19 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+
+    compileSdkVersion rootProject.ext.android['compileSdkVersion']
+    buildToolsVersion rootProject.ext.android['buildToolsVersion']
+
     defaultConfig {
         applicationId "com.android.test.demo"
-        minSdkVersion 24
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.android['minSdkVersion']
+        targetSdkVersion rootProject.ext.android['targetSdkVersion']
+        versionCode rootProject.ext.android['versionCode']
+        versionName rootProject.ext.android['versionName']
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
@@ -33,20 +31,25 @@ android {
 }
 
 
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+
+    // Required for local unit tests (JUnit 4 framework)
+    androidTestImplementation(rootProject.ext.dependencies['espresso'], {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    testImplementation rootProject.ext.dependencies["junit"]
 
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.google.guava:guava:23.5-android'
+    //support
+    implementation rootProject.ext.dependencies['appcompat-v7']
+    implementation rootProject.ext.dependencies['design']
+    implementation rootProject.ext.dependencies['fragment']
 
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile 'com.alibaba:fastjson:1.2.9'
+    //第三方基础组件
+    implementation rootProject.ext.dependencies['okhttp']
+    implementation rootProject.ext.dependencies['fastjson']
 
-    compile 'com.android.support:support-fragment:25.3.1'
+    //java相关
+    implementation rootProject.ext.dependencies['guava']
 }
