@@ -1,22 +1,115 @@
 apply plugin: 'com.android.application'
 
+/**
+ * 拉去git的最新记录hash
+ */
+def gitHash = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+
+/**
+ * 打包时间
+ */
+def buildTime = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("UTC"))
+
 android {
 
     compileSdkVersion rootProject.ext.android['compileSdkVersion']
     buildToolsVersion rootProject.ext.android['buildToolsVersion']
 
     defaultConfig {
+        /**
+         * 是否拆成多个Dex,在buildType中也可以指定
+         */
+        multiDexEnabled true
         applicationId "com.android.test.demo"
         minSdkVersion rootProject.ext.android['minSdkVersion']
         targetSdkVersion rootProject.ext.android['targetSdkVersion']
         versionCode rootProject.ext.android['versionCode']
         versionName rootProject.ext.android['versionName']
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //自定义
+        buildConfigField "String", "GIT_HASH", "\"${gitHash}\""
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
     }
+
+    /**
+     * 项目类型(debug、release)
+     */
     buildTypes {
         release {
-            minifyEnabled false
+
+            //name 'release'
+
+            debuggable false
+
+            /**
+             * 混淆开关
+             */
+            minifyEnabled true
+
+            /**
+             * 是否去除未利用的资源，默认false，表示不去除
+             */
+            shrinkResources true
+
+            /**
+             * 改变apk的applicationId,若release版本和debug版本指定了不同的suffix,则编译出的两个apk可
+             * 以在手机上共存，因为applicationId不同.
+             *
+             * 应用ID和包名是相互独立的。改变包名不会影响应用ID,反之亦然
+             */
+            applicationIdSuffix ".release"
+
+
+            /**
+             * 将混淆文件打包到arr包中，只对aar有效
+             */
+            //consumerProguardFiles 'proguard-android.txt'
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            /**
+             * 如果没有提供混淆规则文件，则设置默认的混淆规则文件(SDK/tools/proguard/proguard-android.txt)
+             */
+            pseudoLocalesEnabled true
+
+            /**
+             * 签名配置
+             */
+            signingConfig signingConfigs.debug
+
+
+            manifestPlaceholders = [
+                    "com.android.test.holder.value": "this is release holder!!"
+            ]
+        }
+
+        debug {
+
+            //name 'debug'
+
+            debuggable true
+
+            minifyEnabled false
+
+
+            shrinkResources false
+
+            /**
+             * 同上
+             */
+            applicationIdSuffix ".debug"
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+
+            pseudoLocalesEnabled false
+
+            signingConfig signingConfigs.debug
+
+            manifestPlaceholders = [
+                    "com.android.test.holder.value": "this is debug holder!!"
+            ]
         }
     }
 
@@ -27,6 +120,28 @@ android {
 
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
+
+    //配置aapt选项
+    aaptOptions {
+
+        /**
+         * 扩展文件不会以压缩的形式存储到apk。
+         * 添加一个空的扩展,即。,设置noCompress”将禁用压缩所有文件。
+         * 例如：aaptOptions //不用压缩的文件noCompress ‘pak’, ‘dat’, ‘bin’
+         */
+        noCompress 'pak', 'dat', 'bin', 'notice'
+
+        /**
+         * png类型的图片会被处理
+         */
+        cruncherEnabled true
+
+        /**
+         * 快速处理，可能需要更多的内存和CPU。int类型。
+         * 默认0，值越大处理越快，需要的内存和CPU也越大。
+         */
+        cruncherProcesses 8
     }
 }
 

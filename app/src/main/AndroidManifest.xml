@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
+
+        <!--测试gradle的manifestPlaceholders功能-->
+        <meta-data android:name="com.android.test.holder.key" android:value="${com.android.test.holder.value}" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

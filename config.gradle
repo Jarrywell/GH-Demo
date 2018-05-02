@@ -4,7 +4,7 @@ def okHttpVersion = '3.9.0'
 ext {
     android = [
             compileSdkVersion: 27,
-            minSdkVersion: 19,
+            minSdkVersion: 24,
             targetSdkVersion: 25,
             buildToolsVersion: '27.0.3',
             versionCode: 1,

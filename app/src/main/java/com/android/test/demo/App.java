@@ -1,5 +1,6 @@
 package com.android.test.demo;
 
+import com.android.test.demo.gradle.TestGradle;
 import com.android.test.demo.memory.ActivityRefWatcher;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.AppCompatNightMode;
@@ -20,6 +21,8 @@ public class App extends Application {
 
 
         ActivityRefWatcher.install(this, new TestRefWatcher());
+
+        TestGradle.test(getApplicationContext());
     }
 
 
