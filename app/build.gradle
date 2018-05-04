@@ -1,7 +1,12 @@
 apply plugin: 'com.android.application'
 
 /**
- * 拉去git的最新记录hash
+ * 参见使用https://blog.csdn.net/heqiangflytosky/article/details/50853268
+ */
+
+
+/**
+ * 拉取git的最新记录hash
  */
 def gitHash = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
@@ -52,7 +57,7 @@ android {
          */
         def stringValueKey = 'test.prop.string.value'
         def stringValue;
-        
+
         /**
          * ./gradlew命令行是否带有参数
          */
@@ -73,9 +78,12 @@ android {
         def intValue;
         if (project.hasProperty(intValueKey)) {
             println(intValueKey + ": " + project.property(intValueKey))
-            intValue = Integer.parseInt(project.property(intValueKey))
+            intValue = project.property(intValueKey) as int
         } else {
-            intValue = Integer.parseInt(project.test.prop.int.value)
+            /**
+             * as int 关键字是用来进行类型转换的
+             */
+            intValue = project.test.prop.int.value as int
         }
 
         buildConfigField "int", "TEST_INT_VALUE", "${intValue}"
@@ -92,7 +100,13 @@ android {
              * java代码目录
              */
             java.srcDirs = [
-                'src/main/java/'
+                'src/main/java/',
+                'src/main/aidl'
+            ]
+
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res2'
             ]
 
             /**
@@ -156,9 +170,10 @@ android {
 
             /**
              * 将混淆文件打包到arr包中，只对aar有效
+             * 分两部分：前一部分是默认的混淆文件：位置在sdk目录/tools/proguard/proguard-android.txt
+             * 后一部分：是我们项目里的自定义的混淆文件，目录就在 app/proguard-rules.txt
+             * 最终混淆的结果是这两部分文件共同作用的
              */
-            //consumerProguardFiles 'proguard-android.txt'
-
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             /**
@@ -171,6 +186,12 @@ android {
              */
             signingConfig signingConfigs.debug
 
+            /**
+             * 指定要ndk需要兼容的架构(这样其他依赖包里mips,x86,arm-v8之类的so会被过滤掉)
+             */
+            ndk {
+                abiFilter "armeabi"
+            }
 
             manifestPlaceholders = [
                     "com.android.test.holder.value": "this is release holder!!"
@@ -200,6 +221,10 @@ android {
 
             signingConfig signingConfigs.debug
 
+            ndk {
+                abiFilter "armeabi"
+            }
+
             manifestPlaceholders = [
                     "com.android.test.holder.value": "this is debug holder!!"
             ]
@@ -224,6 +249,10 @@ android {
             pseudoLocalesEnabled true
 
             signingConfig signingConfigs.debug
+
+            ndk {
+                abiFilter "armeabi"
+            }
 
 
             manifestPlaceholders = [
@@ -298,6 +327,11 @@ android {
          * lint是否展示错误输出的完整路径，默认是从lint调用的相对路径
          */
         absolutePaths false
+
+        /**
+         * 禁止掉某些lint检查
+         */
+        disable 'NewApi', 'MissingTranslation'
     }
 
     /**
