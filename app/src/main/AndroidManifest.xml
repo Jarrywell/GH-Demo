@@ -29,6 +29,7 @@
         <activity android:name=".nightmode.NightModeActivity" android:enabled="true"/>
         <activity android:name=".hook.HookActivity" android:enabled="true"/>
         <activity android:name=".fragment.FragmentActivity" android:enabled="true"/>
+        <activity android:name=".swipeback.TestSwipeBackActivity" android:enabled="true"/>
     </application>
 
 </manifest>

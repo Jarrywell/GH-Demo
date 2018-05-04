@@ -27,6 +27,8 @@ ext {
             "okhttp": "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             "fastjson": "com.alibaba:fastjson:1.2.9",
 
+            "swipebacklayout": "me.imid.swipebacklayout.lib:library:1.0.0",
+
             //java
             "guava": "com.google.guava:guava:23.5-android",
     ]

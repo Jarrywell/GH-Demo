@@ -12,6 +12,7 @@ import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
 import com.android.test.demo.proxy.TestHelloWorld;
 import com.android.test.demo.state.TankStateManchineActivity;
+import com.android.test.demo.swipeback.TestSwipeBackActivity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -95,7 +96,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        startActivity(new Intent(getApplicationContext(), FragmentActivity.class));
+        findViewById(R.id.btn_test_swipe).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), TestSwipeBackActivity.class));
+            }
+        });
+
+        //startActivity(new Intent(getApplicationContext(), FragmentActivity.class));
 
         //测试异常
         //testException();
