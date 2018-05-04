@@ -27,6 +27,11 @@ public class TestGradle {
          * 测试自定义的buildConfig数据
          */
         testBuildConfig();
+
+        /**
+         * 测试自定义属性
+         */
+        testProps();
     }
 
     private static void testMetaData(Context context) {
@@ -43,5 +48,9 @@ public class TestGradle {
 
     private static void testBuildConfig() {
         Log.i(TAG, "git hash: " + BuildConfig.GIT_HASH + ", build time: " + BuildConfig.BUILD_TIME);
+    }
+
+    private static void testProps() {
+        Log.i(TAG, "test string value: " + BuildConfig.TEST_STRING_VALUE + ", test int value: " + BuildConfig.TEST_INT_VALUE);
     }
 }

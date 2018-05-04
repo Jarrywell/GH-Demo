@@ -10,6 +10,22 @@ def gitHash = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.tri
  */
 def buildTime = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("UTC"))
 
+def updateApkName(variant) {
+    def versionName = android.defaultConfig.versionName
+    def newName = "";
+    if (variant.buildType.name.equals('release')) {
+        newName = "GHDemo_" + versionName + "_release.apk"
+    } else if (variant.buildType.name.equals('debug')) {
+        newName = "GHDemo_" + versionName + "_debug.apk"
+    } else if (variant.buildType.name.equals('gray')) {
+        newName = "GHDemo_" + versionName + "_gray.apk"
+    }
+    variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+        //这个修改输出APK的文件名
+        apkData.outputFileName = newName
+    }
+}
+
 android {
 
     compileSdkVersion rootProject.ext.android['compileSdkVersion']
@@ -30,12 +46,89 @@ android {
         //自定义
         buildConfigField "String", "GIT_HASH", "\"${gitHash}\""
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
+
+        /**
+         * 可以通过 ./gradlew assembleDebug -P test.prop.string.value=haah 动态指定该值
+         */
+        def stringValueKey = 'test.prop.string.value'
+        def stringValue;
+        
+        /**
+         * ./gradlew命令行是否带有参数
+         */
+        if (project.hasProperty(stringValueKey)) {
+            println(stringValueKey + ": " + project.property(stringValueKey))
+            stringValue = project.property(stringValueKey)
+        } else {
+            stringValue = project.test.prop.string.value
+        }
+
+        buildConfigField "String", "TEST_STRING_VALUE", "\"${stringValue}\""
+
+
+        /**
+         * 可以通过 ./gradlew assembleDebug -P test.prop.int.value=5000 动态指定该值
+         */
+        def intValueKey = 'test.prop.int.value'
+        def intValue;
+        if (project.hasProperty(intValueKey)) {
+            println(intValueKey + ": " + project.property(intValueKey))
+            intValue = Integer.parseInt(project.property(intValueKey))
+        } else {
+            intValue = Integer.parseInt(project.test.prop.int.value)
+        }
+
+        buildConfigField "int", "TEST_INT_VALUE", "${intValue}"
+    }
+
+    /**
+     *
+     */
+    sourceSets {
+
+        main {
+
+            /**
+             * java代码目录
+             */
+            java.srcDirs = [
+                'src/main/java/'
+            ]
+
+            /**
+             * assets文件目录
+             */
+            assets.srcDirs = [
+                    'assets'
+            ]
+
+            /**
+             * so文件目录
+             */
+            jniLibs.srcDirs = [
+                    'libs',
+                    'src/main/jniLibs'
+            ]
+
+            //jni目录设置
+            jni.srcDirs  = [
+                    'src/main/jni'
+            ]
+
+            /**
+             * aidl文件目录
+             */
+            aidl.srcDirs = [
+
+            ]
+        }
     }
 
     /**
      * 项目类型(debug、release)
      */
     buildTypes {
+
         release {
 
             //name 'release'
@@ -144,8 +237,20 @@ android {
     }
 
     compileOptions {
+        /**
+         * java源码的版本
+         */
         sourceCompatibility JavaVersion.VERSION_1_8
+
+        /**
+         * 生成的Java字节码版本
+         */
         targetCompatibility JavaVersion.VERSION_1_8
+
+        /**
+         * 是否使用Java编写的Gradle新的增量模型
+         */
+        incremental true
     }
 
     configurations.all {
@@ -173,6 +278,56 @@ android {
          */
         cruncherProcesses 8
     }
+
+    dexOptions {
+
+        /**
+         * java堆大小
+         */
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+
+        /**
+         * 如果发现错误，是否终止编译，默认为true
+         */
+        abortOnError true
+
+        /**
+         * lint是否展示错误输出的完整路径，默认是从lint调用的相对路径
+         */
+        absolutePaths false
+    }
+
+    /**
+     *
+     */
+    packagingOptions {
+
+        /**
+         * 符合first-pick模式的，打包的时候将包含在apk中
+         */
+        pickFirsts = [
+
+        ]
+
+        /**
+         * 排除不打包的文件
+         */
+        /*excludes = [
+                'readme.txt',
+                'META-INF/NOTICE.txt'
+        ]*/
+
+        /**
+         * 合并文件，打包进apk
+         */
+        merges = [
+
+        ]
+    }
+
 }
 
 
@@ -199,22 +354,4 @@ dependencies {
 
     //java相关
     implementation rootProject.ext.dependencies['guava']
-}
-
-
-
-def updateApkName(variant) {
-    def versionName = android.defaultConfig.versionName
-    def newName = "";
-    if (variant.buildType.name.equals('release')) {
-        newName = "GHDemo_" + versionName + "_release.apk"
-    } else if (variant.buildType.name.equals('debug')) {
-        newName = "GHDemo_" + versionName + "_debug.apk"
-    } else if (variant.buildType.name.equals('gray')) {
-        newName = "GHDemo_" + versionName + "_gray.apk"
-    }
-    variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
-        //这个修改输出APK的文件名
-        apkData.outputFileName = newName
-    }
 }
