@@ -18,9 +18,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.Map;
+
+import me.imid.swipebacklayout.lib.SwipeBackLayout;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestGH";
@@ -150,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
         //mMemeory.testWeakRefence();
 
         TestHelloWorld.test();
+
+        View test = LayoutInflater.from(this).inflate(R.layout.layout_test_gradle_failed, null);
     }
 
 
