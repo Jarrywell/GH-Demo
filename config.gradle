@@ -27,7 +27,10 @@ ext {
             "okhttp": "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             "fastjson": "com.alibaba:fastjson:1.2.9",
 
-            "swipebacklayout": "me.imid.swipebacklayout.lib:library:1.0.0",
+            /**
+             * 1.0.0版本在com.android.tools.build:gradle:3.1.2上有一个未知问题
+             */
+            "swipebacklayout": "me.imid.swipebacklayout.lib:library:1.3.0",
 
             //java
             "guava": "com.google.guava:guava:23.5-android",
