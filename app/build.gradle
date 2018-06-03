@@ -381,11 +381,23 @@ dependencies {
     implementation rootProject.ext.dependencies['fragment']
 
     //第三方基础组件
-    implementation rootProject.ext.dependencies['okhttp']
+    //implementation rootProject.ext.dependencies['okhttp']
+    implementation rootProject.ext.dependencies['okhttp-logging']
     implementation rootProject.ext.dependencies['fastjson']
 
     implementation rootProject.ext.dependencies['swipebacklayout']
 
     //java相关
     implementation rootProject.ext.dependencies['guava']
+
+    //rxjava
+    implementation rootProject.ext.dependencies['rxandroid']
+
+
+    //retrofit
+    implementation rootProject.ext.dependencies['retrofit']
+    implementation rootProject.ext.dependencies['retrofit-convert-gson']
+    implementation rootProject.ext.dependencies['retrofit-adapter-rxjava']
+    implementation rootProject.ext.dependencies['retrofit-adapter-java8']
+
 }

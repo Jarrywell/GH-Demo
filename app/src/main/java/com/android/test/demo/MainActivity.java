@@ -3,7 +3,6 @@ package com.android.test.demo;
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.fragment.FragmentActivity;
 import com.android.test.demo.hook.HookActivity;
-import com.android.test.demo.http.test.TestHttpRequest;
 import com.android.test.demo.joor.test.TestJOOR;
 import com.android.test.demo.life.TestLifeActivity;
 import com.android.test.demo.log.DLog;
@@ -11,6 +10,7 @@ import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
 import com.android.test.demo.proxy.TestHelloWorld;
+import com.android.test.demo.http.HttpDemoActivity;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_test_http).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TestHttpRequest.doGet();
+                startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
             }
         });
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //startActivity(new Intent(getApplicationContext(), FragmentActivity.class));
+        startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
 
         //测试异常
         //testException();

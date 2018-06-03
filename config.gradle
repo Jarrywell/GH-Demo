@@ -1,5 +1,7 @@
 def supportVersion = '27.0.1'
-def okHttpVersion = '3.9.0'
+def okHttpVersion = '3.10.0'
+def retrofitVersion = '2.4.0'
+def rxjavaVersion = '2.0.0'
 
 ext {
     android = [
@@ -25,6 +27,7 @@ ext {
 
             //第三方业务基础组建
             "okhttp": "com.squareup.okhttp3:okhttp:${okHttpVersion}",
+            "okhttp-logging": "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             "fastjson": "com.alibaba:fastjson:1.2.9",
 
             /**
@@ -34,5 +37,14 @@ ext {
 
             //java
             "guava": "com.google.guava:guava:23.5-android",
+
+            //rxjava
+            "rxandroid": "io.reactivex.rxjava2:rxandroid:${rxjavaVersion}",
+
+            //retrofit
+            "retrofit": "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            "retrofit-convert-gson": "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            "retrofit-adapter-rxjava": "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            "retrofit-adapter-java8": "com.squareup.retrofit2:adapter-java8:${retrofitVersion}",
     ]
 }

@@ -6,6 +6,7 @@ import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.AppCompatNightMode;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * des:
@@ -13,9 +14,12 @@ import android.app.Application;
  * Date: 18-4-2 16:09
  */
 public class App extends Application {
+
+    private static App INSTANCE;
     @Override
     public void onCreate() {
         super.onCreate();
+        INSTANCE = this;
 
         AppCompatNightMode.initTheme(this);
 
@@ -25,5 +29,8 @@ public class App extends Application {
         TestGradle.test(getApplicationContext());
     }
 
+    public static Context getContext() {
+        return INSTANCE.getApplicationContext();
+    }
 
 }
