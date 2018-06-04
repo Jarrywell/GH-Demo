@@ -18,8 +18,8 @@ import retrofit2.adapter.java8.Java8CallAdapterFactory;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public final class HttpInterfaceFactory {
-    private static final String TAG = "HttpInterfaceFactory";
+public final class HttpFactory {
+    private static final String TAG = "HttpFactory";
 
     /**
      * 标识返回的数据是Json格式
@@ -29,11 +29,11 @@ public final class HttpInterfaceFactory {
     /**
      * 标识返回的数据是bitmap
      */
-    public static final String TYPE_BITMAP = "bitmap";
+    public static final String TYPE_BITMAP = "image";
 
     private Map<String, OkHttpClient> mClients = new ConcurrentHashMap<>(4);
     private Map<Class<?>, Object> mInterfaces = new ConcurrentHashMap<>(10);
-    private static HttpInterfaceFactory INSTANCE = new HttpInterfaceFactory();
+    private static HttpFactory INSTANCE = new HttpFactory();
 
     public static GithubInterfaces getGitHubHttpInterface() {
         return create(GithubInterfaces.class, TYPE_JSON);
@@ -69,7 +69,7 @@ public final class HttpInterfaceFactory {
                 if (type.equals(TYPE_JSON)) {
                     builder.addConverterFactory(GsonConverterFactory.create());
                 } else if (type.equals(TYPE_BITMAP)) {
-                    builder.addConverterFactory(new BitmapConverterFactory());
+                    builder.addConverterFactory(BitmapConverterFactory.create());
                 }
                 service = builder.build().create(interfaces);
 
