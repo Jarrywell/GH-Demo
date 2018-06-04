@@ -2,6 +2,7 @@ package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.fragment.FragmentActivity;
+import com.android.test.demo.generics.TestType1;
 import com.android.test.demo.hook.HookActivity;
 import com.android.test.demo.joor.test.TestJOOR;
 import com.android.test.demo.life.TestLifeActivity;
@@ -9,7 +10,6 @@ import com.android.test.demo.log.DLog;
 import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
-import com.android.test.demo.proxy.TestHelloWorld;
 import com.android.test.demo.http.HttpDemoActivity;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
@@ -18,12 +18,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.Map;
-
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "TestGH";
@@ -152,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
         //mMemeory = new MemoryTest(this);
         //mMemeory.testWeakRefence();
 
-        TestHelloWorld.test();
+        //TestHelloWorld.test();
 
-        View test = LayoutInflater.from(this).inflate(R.layout.layout_test_gradle_failed, null);
+        TestType1.test();
     }
 
 
