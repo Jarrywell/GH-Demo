@@ -31,7 +31,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     private Button mBtnTestGithub, mBtnTestSojson;
     private Button mBtnTestRxJava, mBtnTestJava8;
 
-    private Button mBtnTestBitmap;
+    private Button mBtnTestBitmap1, mBtnTestBitmap2;
     private ImageView mBitmapView;
 
 
@@ -52,8 +52,11 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
         mBtnTestJava8 = (Button) findViewById(R.id.id_btn_test_java8);
         mBtnTestJava8.setOnClickListener(this);
 
-        mBtnTestBitmap = (Button) findViewById(R.id.id_btn_test_bitmap);
-        mBtnTestBitmap.setOnClickListener(this);
+        mBtnTestBitmap1 = (Button) findViewById(R.id.id_btn_test_bitmap1);
+        mBtnTestBitmap1.setOnClickListener(this);
+
+        mBtnTestBitmap2 = (Button) findViewById(R.id.id_btn_test_bitmap2);
+        mBtnTestBitmap2.setOnClickListener(this);
 
         mBitmapView = (ImageView) findViewById(R.id.id_bitmap_view);
 
@@ -69,8 +72,10 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
             requestOfRxJava();
         } else if (v == mBtnTestJava8) {
             requestOfJava8();
-        } else if (v == mBtnTestBitmap) {
-            requestBitmap();
+        } else if (v == mBtnTestBitmap1) {
+            requestBitmap("http://d.hiphotos.baidu.com/image/pic/item/63d0f703918fa0ec53d199aa2a9759ee3d6ddb07.jpg");
+        } else if (v == mBtnTestBitmap2) {
+            requestBitmap("https://photo.tuchong.com/389842/f/18552456.jpg");
         }
     }
 
@@ -80,6 +85,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
         call.enqueue(new Callback<List<Contributor>>() {
             @Override
             public void onResponse(Call<List<Contributor>> call, Response<List<Contributor>> response) {
+                response.raw().networkResponse();
                 printContributors(response.body());
             }
 
@@ -149,8 +155,8 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void requestBitmap() {
-        Call<Bitmap> call = HttpFactory.getBitmapInterfaces().getBitmap1();
+    private void requestBitmap(String url) {
+        Call<Bitmap> call = HttpFactory.getBitmapInterfaces().getBitmap(url);
         call.enqueue(new Callback<Bitmap>() {
             @Override
             public void onResponse(Call<Bitmap> call, Response<Bitmap> response) {

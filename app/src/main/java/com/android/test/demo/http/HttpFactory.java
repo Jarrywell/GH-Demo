@@ -31,8 +31,22 @@ public final class HttpFactory {
      */
     public static final String TYPE_BITMAP = "image";
 
+
+    /**
+     * 普通Json缓存大小
+     */
+    private static final int JSON_CACHE_SIZE = 1024 * 1024 * 20;
+
+
+    /**
+     * 图片缓存大小
+     */
+    private static final int BITMAP_CACHE_SIZE = 1024 * 1024 * 20;
+
+
     private Map<String, OkHttpClient> mClients = new ConcurrentHashMap<>(4);
     private Map<Class<?>, Object> mInterfaces = new ConcurrentHashMap<>(10);
+    private HttpLoggingInterceptor mLoggingInterceptor;
     private static HttpFactory INSTANCE = new HttpFactory();
 
     public static GithubInterfaces getGitHubHttpInterface() {
@@ -95,29 +109,29 @@ public final class HttpFactory {
         }
         return client;
     }
+
+    private HttpFactory() {
+        mLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                @Override
+                public void log(String message) {
+                    Log.i(TAG, message);
+                }
+            }).setLevel(HttpLoggingInterceptor.Level.HEADERS);
+    }
+
     private OkHttpClient createHttpClinet(String type) {
-        HttpLoggingInterceptor loggingInterceptor =
-                new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        Log.i(TAG, message);
-                    }
-                });
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
-
-        final long cacheSize = type.equals(TYPE_JSON) ? 1024 * 1024 * 20 : 1024 * 1024 * 50;
+        final long cacheSize = type.equals(TYPE_JSON) ? JSON_CACHE_SIZE : BITMAP_CACHE_SIZE;
         final File cachePath = new File(App.getContext().getExternalCacheDir(), type);
-        Log.i(TAG, "cache path: " + cachePath.getAbsolutePath());
-
+        Log.i(TAG, "cache path: " + cachePath.getAbsolutePath() + ", size: " + cacheSize);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(8, TimeUnit.SECONDS)
                 .writeTimeout(8, TimeUnit.SECONDS)
                 .readTimeout(8, TimeUnit.SECONDS)
                 //.retryOnConnectionFailure(true)
-                .addNetworkInterceptor(loggingInterceptor)
-                //.addInterceptor(new CacheInterceptor())
-                .addNetworkInterceptor(new CacheInterceptor())
+                .addNetworkInterceptor(mLoggingInterceptor)
+                .addInterceptor(InterceptorFactory.createLocalInterceptor())
+                .addNetworkInterceptor(InterceptorFactory.createNetWorkInterceptor())
                 .cache(new Cache(cachePath, cacheSize))
                 .build();
 
