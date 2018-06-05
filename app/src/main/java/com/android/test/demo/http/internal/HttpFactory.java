@@ -1,4 +1,4 @@
-package com.android.test.demo.http;
+package com.android.test.demo.http.internal;
 
 
 import android.util.Log;
@@ -49,17 +49,6 @@ public final class HttpFactory {
     private HttpLoggingInterceptor mLoggingInterceptor;
     private static HttpFactory INSTANCE = new HttpFactory();
 
-    public static GithubInterfaces getGitHubHttpInterface() {
-        return create(GithubInterfaces.class, TYPE_JSON);
-    }
-
-    public static SinaInterfaces getSinaHttpInterfaces() {
-        return create(SinaInterfaces.class, TYPE_JSON);
-    }
-
-    public static BitmapInterfaces getBitmapInterfaces() {
-        return create(BitmapInterfaces.class, TYPE_BITMAP);
-    }
 
     public static <T> T create(Class<T> interfaces, String type) {
         Object service = INSTANCE.mInterfaces.get(interfaces);

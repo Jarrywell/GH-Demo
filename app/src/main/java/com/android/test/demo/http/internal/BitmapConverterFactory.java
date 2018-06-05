@@ -1,4 +1,4 @@
-package com.android.test.demo.http;
+package com.android.test.demo.http.internal;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +14,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-public class BitmapConverterFactory extends Converter.Factory {
+final class BitmapConverterFactory extends Converter.Factory {
 
     private final String TAG = "BitmapConverterFactory";
 

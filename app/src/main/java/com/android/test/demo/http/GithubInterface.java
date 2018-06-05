@@ -1,6 +1,7 @@
 package com.android.test.demo.http;
 
-import com.android.test.demo.http.bean.Contributor;
+import com.android.test.demo.http.internal.BaseUrl;
+import com.android.test.demo.http.internal.CacheTimes;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,7 +13,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 @BaseUrl("https://api.github.com")
-public interface GithubInterfaces {
+public interface GithubInterface {
 
     /**
      * 普通请求返回Call

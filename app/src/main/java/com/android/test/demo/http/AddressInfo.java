@@ -1,4 +1,4 @@
-package com.android.test.demo.http.bean;
+package com.android.test.demo.http;
 
 public class AddressInfo {
     private String country;

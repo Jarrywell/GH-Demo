@@ -1,4 +1,4 @@
-package com.android.test.demo.http;
+package com.android.test.demo.http.internal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

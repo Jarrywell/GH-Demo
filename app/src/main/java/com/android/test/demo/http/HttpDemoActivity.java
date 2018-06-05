@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.android.test.demo.R;
-import com.android.test.demo.http.bean.AddressInfo;
-import com.android.test.demo.http.bean.Contributor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -80,7 +78,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void cacheOfServer() {
-        Call<List<Contributor>> call =  HttpFactory.getGitHubHttpInterface()
+        Call<List<Contributor>> call =  InterfaceFactory.getGitHubHttpInterface()
                 .contributors("square", "retrofit");
         call.enqueue(new Callback<List<Contributor>>() {
             @Override
@@ -97,7 +95,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void cacheOfClinet() {
-        Call<AddressInfo> call = HttpFactory.getSinaHttpInterfaces()
+        Call<AddressInfo> call = InterfaceFactory.getSinaHttpInterfaces()
                 .requestAddressInfo();
         call.enqueue(new Callback<AddressInfo>() {
             @Override
@@ -114,7 +112,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void requestOfRxJava() {
-        Observable<List<Contributor>> observable = HttpFactory.getGitHubHttpInterface()
+        Observable<List<Contributor>> observable = InterfaceFactory.getGitHubHttpInterface()
                 .contributorsOfRxJava("square", "retrofit");
 
         observable.subscribeOn(Schedulers.io())
@@ -144,7 +142,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void requestOfJava8() {
-        CompletableFuture<List<Contributor>> future =  HttpFactory.getGitHubHttpInterface()
+        CompletableFuture<List<Contributor>> future =  InterfaceFactory.getGitHubHttpInterface()
                 .contributorsOfJava8("square", "retrofit");
 
         future.thenAccept(new Consumer<List<Contributor>>() {
@@ -156,7 +154,7 @@ public class HttpDemoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void requestBitmap(String url) {
-        Call<Bitmap> call = HttpFactory.getBitmapInterfaces().getBitmap(url);
+        Call<Bitmap> call = InterfaceFactory.getBitmapInterfaces().getBitmap(url);
         call.enqueue(new Callback<Bitmap>() {
             @Override
             public void onResponse(Call<Bitmap> call, Response<Bitmap> response) {

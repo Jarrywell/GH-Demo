@@ -1,4 +1,4 @@
-package com.android.test.demo.http;
+package com.android.test.demo.http.internal;
 
 public interface CacheTimes {
 
