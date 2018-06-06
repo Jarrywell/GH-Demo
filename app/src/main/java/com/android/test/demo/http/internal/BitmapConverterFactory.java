@@ -51,7 +51,13 @@ final class BitmapConverterFactory extends Converter.Factory {
 
         @Override
         public Bitmap convert(ResponseBody value) throws IOException {
-            return BitmapFactory.decodeStream(value.byteStream());
+            /**
+             * 暂时只支持默认设置config
+             */
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+            return BitmapFactory.decodeStream(value.byteStream(), null, options);
         }
     }
 

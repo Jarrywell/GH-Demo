@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import okhttp3.Cache;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -50,41 +53,85 @@ public final class HttpFactory {
     private static HttpFactory INSTANCE = new HttpFactory();
 
 
-    public static <T> T create(Class<T> interfaces, String type) {
-        Object service = INSTANCE.mInterfaces.get(interfaces);
-        if (service != null) {
-            return (T) service;
+    public static class Builder<T> {
+        private boolean log;
+        private String type;
+        private Class<T> service;
+        private SSLSocketFactory sSLSocketFactory;
+
+        public Builder<T> type(String type) {
+            this.type = type;
+            return this;
         }
-        synchronized (INSTANCE.mInterfaces) {
-            service = INSTANCE.mInterfaces.get(interfaces);
+
+        public Builder<T> log(boolean log) {
+            this.log = log;
+            return this;
+        }
+
+        public Builder<T> service(final Class<T> service) {
+            this.service = service;
+            return this;
+        }
+
+        public Builder<T> addSSLSocketFactory(SSLSocketFactory sSLSocketFactory) {
+            this.sSLSocketFactory = sSLSocketFactory;
+            return this;
+        }
+
+        public T build() {
+            Class<T> serviceClz = this.service;
             if (service == null) {
-                String baseUrl = "http://localhost/";
-                if(interfaces.isAnnotationPresent(BaseUrl.class)) {
-                    BaseUrl nameInject = interfaces.getAnnotation(BaseUrl.class);
-                    baseUrl = nameInject.value();
-                }
-                Log.i(TAG, "create base url: " + baseUrl);
-                Retrofit.Builder builder = new Retrofit.Builder()
+                if (log) Log.i(TAG, "HttpFactory must set http service!");
+                return null;
+            }
+            Object service = INSTANCE.mInterfaces.get(serviceClz);
+            if (service != null) {
+                return (T) service;
+            }
+            synchronized (INSTANCE.mInterfaces) {
+                service = INSTANCE.mInterfaces.get(serviceClz);
+                if (service == null) {
+                    String baseUrl = "http://localhost/";
+                    if(serviceClz.isAnnotationPresent(BaseUrl.class)) {
+                        BaseUrl nameInject = serviceClz.getAnnotation(BaseUrl.class);
+                        baseUrl = nameInject.value();
+                    }
+                    Log.i(TAG, "create base url: " + baseUrl);
+                    Retrofit.Builder builder = new Retrofit.Builder()
                         .baseUrl(baseUrl)
-                        .client(INSTANCE.getClient(type))
+                        .client(INSTANCE.getClient(type, sSLSocketFactory, log))
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .addCallAdapterFactory(Java8CallAdapterFactory.create());
-                if (type.equals(TYPE_JSON)) {
-                    builder.addConverterFactory(GsonConverterFactory.create());
-                } else if (type.equals(TYPE_BITMAP)) {
-                    builder.addConverterFactory(BitmapConverterFactory.create());
-                }
-                service = builder.build().create(interfaces);
+                    if (type.equals(TYPE_JSON)) {
+                        builder.addConverterFactory(GsonConverterFactory.create());
+                    } else if (type.equals(TYPE_BITMAP)) {
+                        builder.addConverterFactory(BitmapConverterFactory.create());
+                    }
+                    service = builder.build().create(serviceClz);
 
-                INSTANCE.mInterfaces.put(interfaces, service);
+                    INSTANCE.mInterfaces.put(serviceClz, service);
+                }
             }
+            return (T) service;
         }
-        return (T) service;
     }
 
+    /*public static <T> T getService(Class<T> interfaces) {
+        if (interfaces != null) {
+            Object service = INSTANCE.mInterfaces.get(interfaces);
+            if (service != null) {
+                return (T) service;
+            }
+            synchronized (INSTANCE.mInterfaces) {
+                service = INSTANCE.mInterfaces.get(interfaces);
+            }
+            return (T) service;
+        }
+        return null;
+    }*/
 
-
-    private OkHttpClient getClient(String type) {
+    private OkHttpClient getClient(String type, SSLSocketFactory sSLSocketFactory, boolean log) {
         OkHttpClient client = mClients.get(type);
         if (client != null) {
             return client;
@@ -92,7 +139,7 @@ public final class HttpFactory {
         synchronized (mClients) {
             client = mClients.get(type);
             if (client == null) {
-                client = createHttpClinet(type);
+                client = createHttpClinet(type, sSLSocketFactory, log);
                 mClients.put(type, client);
             }
         }
@@ -108,22 +155,36 @@ public final class HttpFactory {
             }).setLevel(HttpLoggingInterceptor.Level.HEADERS);
     }
 
-    private OkHttpClient createHttpClinet(String type) {
+    private OkHttpClient createHttpClinet(String type, SSLSocketFactory sSLSocketFactory, boolean log) {
         final long cacheSize = type.equals(TYPE_JSON) ? JSON_CACHE_SIZE : BITMAP_CACHE_SIZE;
         final File cachePath = new File(App.getContext().getExternalCacheDir(), type);
+        final Cache cache = new Cache(cachePath, cacheSize);
         Log.i(TAG, "cache path: " + cachePath.getAbsolutePath() + ", size: " + cacheSize);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(8, TimeUnit.SECONDS)
-                .writeTimeout(8, TimeUnit.SECONDS)
-                .readTimeout(8, TimeUnit.SECONDS)
-                //.retryOnConnectionFailure(true)
-                .addNetworkInterceptor(mLoggingInterceptor)
-                .addInterceptor(InterceptorFactory.createLocalInterceptor())
-                .addNetworkInterceptor(InterceptorFactory.createNetWorkInterceptor())
-                .cache(new Cache(cachePath, cacheSize))
-                .build();
+        /**
+         * 控制最大运行的线程数
+         */
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequests(32); //默认64
 
-        return client;
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .writeTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(8, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(InterceptorFactory.createLocalInterceptor())
+            .addNetworkInterceptor(InterceptorFactory.createNetWorkInterceptor())
+            .cache(cache)
+            .dispatcher(dispatcher);
+
+        if (sSLSocketFactory != null) {
+            builder.sslSocketFactory(sSLSocketFactory);
+        }
+
+        if (log) {
+            builder.addNetworkInterceptor(mLoggingInterceptor);
+        }
+
+        return builder.build();
     }
 }
