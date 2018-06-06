@@ -3,6 +3,11 @@ package com.android.test.demo.http;
 import com.android.test.demo.BuildConfig;
 import com.android.test.demo.http.internal.HttpFactory;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.android.test.demo.http.internal.HttpFactory.TYPE_BITMAP;
 import static com.android.test.demo.http.internal.HttpFactory.TYPE_JSON;
 
@@ -37,5 +42,18 @@ public class InterfaceFactory {
             .log(BuildConfig.DEBUG)
             .type(TYPE_BITMAP)
             .build();
+    }
+
+    /**
+     * 
+     * @param observable
+     * @param observer
+     * @param <T>
+     */
+    public static <T> void setSubscribe(Observable<T> observable, Observer<T> observer) {
+        observable.subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())//子线程访问网络
+            .observeOn(AndroidSchedulers.mainThread())//回调到主线程
+            .subscribe(observer);
     }
 }

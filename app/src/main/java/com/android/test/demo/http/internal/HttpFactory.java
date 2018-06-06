@@ -6,6 +6,9 @@ import android.util.Log;
 import com.android.test.demo.App;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +16,10 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Cache;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.Dispatcher;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -47,8 +53,9 @@ public final class HttpFactory {
     private static final int BITMAP_CACHE_SIZE = 1024 * 1024 * 20;
 
 
-    private Map<String, OkHttpClient> mClients = new ConcurrentHashMap<>(4);
-    private Map<Class<?>, Object> mInterfaces = new ConcurrentHashMap<>(10);
+    private final Map<String, OkHttpClient> mClients = new ConcurrentHashMap<>(4);
+    private final Map<Class<?>, Object> mInterfaces = new ConcurrentHashMap<>(10);
+    private final Map<HttpUrl, List<Cookie>> mCookieStore = new HashMap<>();
     private HttpLoggingInterceptor mLoggingInterceptor;
     private static HttpFactory INSTANCE = new HttpFactory();
 
@@ -184,6 +191,22 @@ public final class HttpFactory {
         if (log) {
             builder.addNetworkInterceptor(mLoggingInterceptor);
         }
+
+        /**
+         * 设置cookie
+         */
+        builder.cookieJar(new CookieJar() {
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                mCookieStore.put(url, cookies);
+            }
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> cookies = mCookieStore.get(url);
+                return cookies != null ? cookies : new ArrayList<Cookie>();
+            }
+        });
 
         return builder.build();
     }
