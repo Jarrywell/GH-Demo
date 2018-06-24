@@ -8,9 +8,9 @@ import android.util.Log;
  *
  * 通配符<?>和类型参数<T>的区别就在于，对编译器来说所有的T都代表同一种类型,但通配符<?>没有这种约束.
  */
-public class TestBounds {
+public class TestBounds1 {
 
-    private static final String TAG = "TestBounds";
+    private static final String TAG = "TestBounds1";
 
     /**
      * 验证下界：subscribe(<? super Apple>)
