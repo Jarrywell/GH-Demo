@@ -2,6 +2,8 @@ package com.android.test.demo;
 
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.fragment.FragmentActivity;
+import com.android.test.demo.generics.TestArray;
+import com.android.test.demo.generics.TestBounds5;
 import com.android.test.demo.generics.TestType1;
 import com.android.test.demo.hook.HookActivity;
 import com.android.test.demo.joor.test.TestJOOR;
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
+        //startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
 
         //测试异常
         //testException();
@@ -151,7 +153,11 @@ public class MainActivity extends AppCompatActivity {
 
         //TestHelloWorld.test();
 
-        TestType1.test();
+        //TestType1.test();
+
+        //TestArray.test();
+
+        TestBounds5.test();
     }
 
 
