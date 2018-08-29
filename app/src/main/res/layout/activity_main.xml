@@ -86,6 +86,14 @@
             android:layout_marginBottom="10dp"
             />
 
+        <Button
+            android:id="@+id/btn_test_plugin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="模拟启动插件activity"
+            android:layout_marginBottom="10dp"
+            />
+
     </LinearLayout>
 
 </ScrollView>

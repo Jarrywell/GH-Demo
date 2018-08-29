@@ -4,6 +4,7 @@ import com.android.test.demo.gradle.TestGradle;
 import com.android.test.demo.memory.ActivityRefWatcher;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.AppCompatNightMode;
+import com.android.test.demo.plugin.Hooks;
 
 import android.app.Application;
 import android.content.Context;
@@ -27,6 +28,16 @@ public class App extends Application {
         ActivityRefWatcher.install(this, new TestRefWatcher());
 
         TestGradle.test(getApplicationContext());
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        /**
+         * hook classLoader
+         */
+        Hooks.attachBaseContext(this);
     }
 
     public static Context getContext() {

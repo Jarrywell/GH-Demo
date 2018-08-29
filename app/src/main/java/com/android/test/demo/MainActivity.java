@@ -13,6 +13,7 @@ import com.android.test.demo.memory.MemoryTest;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
 import com.android.test.demo.http.HttpDemoActivity;
+import com.android.test.demo.plugin.activitys.OriginActivity;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
 
@@ -104,6 +105,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), TestSwipeBackActivity.class));
             }
         });
+
+        findViewById(R.id.btn_test_plugin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**
+                 * 这里启动的是一个在manifest中注册过的原生activity,
+                 * 但在系统加载OriginActivity回调loadClass()的时候,我们替换他为一个插件中的Plugin1Activity(模拟)
+                 * 并能回调actvity的生命周期
+                 */
+                startActivity(new Intent(getApplicationContext(), OriginActivity.class));
+            }
+        });
+
+
 
         //startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
 
