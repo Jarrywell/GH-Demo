@@ -1,4 +1,4 @@
-def supportVersion = '27.0.1'
+def supportVersion = '27.1.1'
 def okHttpVersion = '3.10.0'
 def retrofitVersion = '2.4.0'
 def rxjavaVersion = '2.0.0'

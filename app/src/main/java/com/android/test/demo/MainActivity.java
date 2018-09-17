@@ -1,5 +1,6 @@
 package com.android.test.demo;
 
+import com.android.test.demo.arch.ArchBootActivity;
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.fragment.FragmentActivity;
 import com.android.test.demo.generics.TestArray;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  * 重要，模拟取消强引用
                  */
-                mRefWatchObj = null;
+                //mRefWatchObj = null;
             }
         });
 
@@ -118,10 +119,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn_test_arch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ArchBootActivity.class));
+            }
+        });
 
-
-        //startActivity(new Intent(getApplicationContext(), HttpDemoActivity.class));
-
+        startActivity(new Intent(getApplicationContext(), ArchBootActivity.class));
         //测试异常
         //testException();
 

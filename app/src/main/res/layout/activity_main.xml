@@ -20,6 +20,7 @@
             android:id="@+id/btn_joor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="jOOR反射学习"
             android:layout_marginBottom="10dp"
             />
@@ -27,6 +28,7 @@
             android:id="@+id/btn_view_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="在View中监听宿主Activity的生命周期实现"
             android:layout_marginBottom="10dp"
             />
@@ -34,6 +36,7 @@
             android:id="@+id/btn_state_machine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="层次状态机（坦克）"
             android:layout_marginBottom="10dp"
             />
@@ -42,6 +45,7 @@
             android:id="@+id/btn_test_weakreference"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="Weak Reference 弱引用测试"
             android:layout_marginBottom="10dp"
             />
@@ -50,6 +54,7 @@
             android:id="@+id/btn_test_http"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="http请求"
             android:layout_marginBottom="10dp"
             />
@@ -58,6 +63,7 @@
             android:id="@+id/btn_test_night_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="夜间模式"
             android:layout_marginBottom="10dp"
             />
@@ -66,7 +72,8 @@
             android:id="@+id/btn_test_hook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="HOOK"
+            android:textAllCaps="false"
+            android:text="Hook"
             android:layout_marginBottom="10dp"
             />
 
@@ -74,6 +81,7 @@
             android:id="@+id/btn_test_fragments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="Fragment"
             android:layout_marginBottom="10dp"
             />
@@ -82,6 +90,7 @@
             android:id="@+id/btn_test_swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="swipe back"
             android:layout_marginBottom="10dp"
             />
@@ -94,6 +103,14 @@
             android:layout_marginBottom="10dp"
             />
 
+        <Button
+            android:id="@+id/btn_test_arch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="Architecture Demo"
+            android:layout_marginBottom="10dp"
+            />
     </LinearLayout>
 
 </ScrollView>
