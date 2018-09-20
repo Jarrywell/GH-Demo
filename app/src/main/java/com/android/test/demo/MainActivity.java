@@ -2,6 +2,7 @@ package com.android.test.demo;
 
 import com.android.test.demo.arch.ArchBootActivity;
 import com.android.test.demo.exception.TestException;
+import com.android.test.demo.executor.GHTaskExecutor;
 import com.android.test.demo.fragment.FragmentActivity;
 import com.android.test.demo.generics.TestArray;
 import com.android.test.demo.generics.TestBounds5;
@@ -179,6 +180,11 @@ public class MainActivity extends AppCompatActivity {
 
         TestBounds5.test();
 
+        /**
+         * 测试Executor
+         */
+        testExecutor();
+
     }
 
 
@@ -198,6 +204,29 @@ public class MainActivity extends AppCompatActivity {
 
         testException.testGHException();
 
+    }
+
+    private void testExecutor() {
+        GHTaskExecutor.getInstance().executeOnDiskIO(new Runnable() {
+            @Override
+            public void run() {
+                DLog.i(TAG, "executeOnDiskIO() this is io trhead!!!, thread name: " + Thread.currentThread().getName());
+            }
+        });
+
+        GHTaskExecutor.getInstance().postToMainThread(new Runnable() {
+            @Override
+            public void run() {
+                DLog.i(TAG, "postToMainThread() this is main trhead!!!, thread name: " + Thread.currentThread().getName());
+            }
+        });
+
+        GHTaskExecutor.getInstance().executeOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                DLog.i(TAG, "executeOnMainThread() this is main trhead!!!, thread name: " + Thread.currentThread().getName());
+            }
+        });
     }
 
 
