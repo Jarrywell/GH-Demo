@@ -380,6 +380,10 @@ dependencies {
     implementation rootProject.ext.dependencies['design']
     implementation rootProject.ext.dependencies['fragment']
 
+    //arch
+    implementation rootProject.ext.dependencies['lifecycle-extensions']
+
+
     //第三方基础组件
     //implementation rootProject.ext.dependencies['okhttp']
     implementation rootProject.ext.dependencies['okhttp-logging']

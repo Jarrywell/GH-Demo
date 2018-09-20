@@ -2,6 +2,7 @@ def supportVersion = '27.1.1'
 def okHttpVersion = '3.10.0'
 def retrofitVersion = '2.4.0'
 def rxjavaVersion = '2.0.0'
+def archVersjion = '1.1.1'
 
 ext {
     android = [
@@ -24,6 +25,9 @@ ext {
             "support-annotations": "com.android.support:support-annotations:${supportVersion}",
             "design": "com.android.support:design:${supportVersion}",
             "fragment": "com.android.support:support-fragment:${supportVersion}",
+
+            //arch
+            "lifecycle-extensions": "android.arch.lifecycle:extensions:${archVersjion}",
 
             //第三方业务基础组建
             "okhttp": "com.squareup.okhttp3:okhttp:${okHttpVersion}",

@@ -35,7 +35,6 @@
         <activity android:name=".swipeback.TestSwipeBackActivity" android:enabled="true"/>
         <activity android:name=".http.HttpDemoActivity" android:enabled="true"/>
         <activity android:name=".plugin.activitys.OriginActivity" android:enabled="true"/>
-=======
         <activity android:name=".arch.ArchBootActivity" android:enabled="true"/>
     </application>
 
