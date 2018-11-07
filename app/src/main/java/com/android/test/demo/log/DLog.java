@@ -1,9 +1,13 @@
 package com.android.test.demo.log;
 
 
+import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import com.android.test.demo.joor.Reflect;
+
+import java.io.File;
 
 public class DLog {
 
@@ -15,6 +19,13 @@ public class DLog {
      * adb shell setprop ro.tech.log true
      */
     private static final String LOG_ENABLE_PROP = "ro.tech.log";
+
+    /**
+     * 文件日志开关设置
+     *
+     * adb shell setprop ro.tech.file.log true
+     */
+    private static final String FILE_LOG_ENABLE_PROP = "ro.tech.file.log";
 
 
     /**
@@ -42,9 +53,23 @@ public class DLog {
     private final static boolean LOG_THREADED = getBoolean(LOG_THREAD_PROP, true);
 
 
+    /**
+     * 用于终端日志开关
+     */
+    private final static boolean LOCAL_LOGED = getBoolean(LOG_ENABLE_PROP, false);
 
-    public final static boolean LOGED = com.android.test.demo.BuildConfig.DEBUG || getBoolean(LOG_ENABLE_PROP, false);
 
+    /**
+     * 用于文件日志开关
+     */
+    private static boolean LOCAL_FILE_LOGED = getBoolean(FILE_LOG_ENABLE_PROP, false);
+
+
+
+    public final static boolean LOGED = com.android.test.demo.BuildConfig.DEBUG || LOCAL_LOGED || LOCAL_FILE_LOGED;
+
+
+    private static FileLogger sFileLogger = null;
 
     public static void v(String tag, String message) {
         wirte(Log.VERBOSE, tag, message, null);
@@ -86,6 +111,12 @@ public class DLog {
         wirte(Log.ERROR, tag, message, t);
     }
 
+    public static void flush() {
+        if (sFileLogger != null) {
+            sFileLogger.flush();
+        }
+    }
+
 
 
     /**
@@ -121,6 +152,9 @@ public class DLog {
                 } else {
                     Log.v(tag, message, t);
                 }
+                if (sFileLogger != null) {
+                    sFileLogger.v(tag, message, t);
+                }
                 break;
             }
             case Log.DEBUG: {
@@ -128,6 +162,9 @@ public class DLog {
                     Log.d(tag, message);
                 } else {
                     Log.d(tag, message, t);
+                }
+                if (sFileLogger != null) {
+                    sFileLogger.d(tag, message, t);
                 }
                 break;
             }
@@ -137,6 +174,9 @@ public class DLog {
                 } else {
                     Log.i(tag, message, t);
                 }
+                if (sFileLogger != null) {
+                    sFileLogger.i(tag, message, t);
+                }
                 break;
             }
             case Log.WARN: {
@@ -144,6 +184,9 @@ public class DLog {
                     Log.w(tag, message);
                 } else {
                     Log.w(tag, message, t);
+                }
+                if (sFileLogger != null) {
+                    sFileLogger.w(tag, message, t);
                 }
                 break;
             }
@@ -153,8 +196,25 @@ public class DLog {
                 } else {
                     Log.e(tag, message, t);
                 }
+                if (sFileLogger != null) {
+                    sFileLogger.e(tag, message, t);
+                }
                 break;
             }
+        }
+    }
+
+    public static void init(Context context, boolean fileEnable) {
+        if ((LOCAL_FILE_LOGED || fileEnable) && context != null && sFileLogger == null) {
+            final String packageName = context.getPackageName();
+            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/" + packageName + "/GHLog/";
+            File file = new File(path);
+            if (!file.exists() && !file.mkdirs()) {
+                LOCAL_FILE_LOGED = false;
+                return;
+            }
+            file = new File(path, "main.log");
+            sFileLogger = new FileLogger(file, packageName);
         }
     }
 

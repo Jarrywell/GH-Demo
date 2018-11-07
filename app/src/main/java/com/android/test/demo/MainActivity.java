@@ -236,5 +236,6 @@ public class MainActivity extends AppCompatActivity {
         if (mMemeory != null) {
             mMemeory.release();
         }
+        DLog.flush();
     }
 }

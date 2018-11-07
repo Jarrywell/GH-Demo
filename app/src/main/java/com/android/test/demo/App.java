@@ -1,6 +1,7 @@
 package com.android.test.demo;
 
 import com.android.test.demo.gradle.TestGradle;
+import com.android.test.demo.log.DLog;
 import com.android.test.demo.memory.ActivityRefWatcher;
 import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.AppCompatNightMode;
@@ -21,6 +22,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         INSTANCE = this;
+
+        DLog.init(this, BuildConfig.DEBUG);
 
         AppCompatNightMode.initTheme(this);
 
