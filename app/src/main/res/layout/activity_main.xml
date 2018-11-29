@@ -111,6 +111,15 @@
             android:text="Architecture Demo"
             android:layout_marginBottom="10dp"
             />
+
+        <Button
+            android:id="@+id/btn_test_uri"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="测试Uri的解析接口"
+            android:layout_marginBottom="10dp"
+            />
     </LinearLayout>
 
 </ScrollView>

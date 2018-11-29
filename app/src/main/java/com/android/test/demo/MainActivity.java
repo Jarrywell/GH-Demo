@@ -4,9 +4,7 @@ import com.android.test.demo.arch.ArchBootActivity;
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.executor.GHTaskExecutor;
 import com.android.test.demo.fragment.FragmentActivity;
-import com.android.test.demo.generics.TestArray;
 import com.android.test.demo.generics.TestBounds5;
-import com.android.test.demo.generics.TestType1;
 import com.android.test.demo.hook.HookActivity;
 import com.android.test.demo.joor.test.TestJOOR;
 import com.android.test.demo.life.TestLifeActivity;
@@ -127,7 +125,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        startActivity(new Intent(getApplicationContext(), ArchBootActivity.class));
+        findViewById(R.id.btn_test_uri).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /**
+                 * 调用测试接口
+                 */
+                TestUri.test();
+
+                /**
+                 * 测试Uri.Builder
+                 */
+                TestUri.testBuilder();
+            }
+        });
+
+        //startActivity(new Intent(getApplicationContext(), ArchBootActivity.class));
         //测试异常
         //testException();
 
@@ -186,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         testExecutor();
 
     }
+
 
 
     private void testException() {
