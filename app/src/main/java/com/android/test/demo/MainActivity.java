@@ -16,6 +16,8 @@ import com.android.test.demo.http.HttpDemoActivity;
 import com.android.test.demo.plugin.activitys.OriginActivity;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
+import com.android.test.demo.uri.TestUri;
+import com.android.test.demo.uri.UrlBean;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -251,5 +253,7 @@ public class MainActivity extends AppCompatActivity {
             mMemeory.release();
         }
         DLog.flush();
+
+        UrlBean.clear();
     }
 }

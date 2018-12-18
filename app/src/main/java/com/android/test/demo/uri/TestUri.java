@@ -1,4 +1,4 @@
-package com.android.test.demo;
+package com.android.test.demo.uri;
 
 import android.net.Uri;
 import android.util.Log;
@@ -33,7 +33,7 @@ public class TestUri {
     /**
      * 测试url
      */
-    private static final String url = "https://open.toutiao.com/a6626691667539788292/?utm_campaign=open&utm_medium=webview"
+    private static final String url = "https://open.toutiao.com/a6626691667539788292?utm_campaign=open&utm_medium=webview"
         + "&utm_source=meizu_zx_api&item_id=6626691667539788292&req_id=2018112820022801000805902325900&dt=pro7"
         + "&a_t=11155118104659902191536&city=local&imei=867884030058100&openudid=867884030058100&os=Android"
         + "&label=click_headline&gy=51d497add261dd9874f26ea6ef4b469728f0b73aeb9d65da9ff25c9a052fe4a4b79220ffc4a6388df68cfb4eb06c5dc3dab129ea9cb0b7fcc91cb3d3e667faf162a27572fe8d8965f2b906db516e2324"
