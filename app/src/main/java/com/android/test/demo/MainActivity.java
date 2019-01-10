@@ -14,10 +14,12 @@ import com.android.test.demo.memory.TestRefWatcher;
 import com.android.test.demo.nightmode.NightModeActivity;
 import com.android.test.demo.http.HttpDemoActivity;
 import com.android.test.demo.plugin.activitys.OriginActivity;
+import com.android.test.demo.proxy.TestHelloWorld;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
 import com.android.test.demo.uri.TestUri;
 import com.android.test.demo.uri.UrlBean;
+import com.android.test.demo.threads.TestProducer_Consumer;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -193,13 +195,16 @@ public class MainActivity extends AppCompatActivity {
 
         //TestArray.test();
 
-        TestBounds5.test();
+        //TestBounds5.test();
 
         /**
          * 测试Executor
          */
-        testExecutor();
+        //testExecutor();
 
+        //TestBounds5.test();
+
+        //TestProducer_Consumer.test();
     }
 
 
