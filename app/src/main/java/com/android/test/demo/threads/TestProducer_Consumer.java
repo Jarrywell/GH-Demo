@@ -35,12 +35,12 @@ public class TestProducer_Consumer {
         /**
          * 使用ReentrantLock(重入锁)实现的生产者/消费者模式
          */
-        //Person p = new Person2();
+        Person p = new Person2();
 
         /**
          * 使用BlockingQueue实现的生产者/消费者模式
          */
-        Person p = new Person3();
+        //Person p = new Person3();
 
         /**
          * 生产者线程
@@ -266,7 +266,15 @@ public class TestProducer_Consumer {
          */
         private Lock mLock = new ReentrantLock(false);
 
-        private Condition mCondition = mLock.newCondition();
+        /**
+         * 仓库满的条件变量
+         */
+        private Condition mFullCondition = mLock.newCondition();
+
+        /**
+         * 仓库空的条件变量
+         */
+        private Condition mEmptyCondition = mLock.newCondition();
 
         @Override
         public void push(String name, int age) {
@@ -281,7 +289,7 @@ public class TestProducer_Consumer {
                     /**
                      * 通过Condition对象来使线程wait，必须先执行lock.lock方法获得锁
                      */
-                    mCondition.await(); //等价与Object.wait()方法
+                    mFullCondition.await(); //等价与Object.wait()方法
                 }
 
                 //--开始生产
@@ -305,8 +313,8 @@ public class TestProducer_Consumer {
                  *
                  * 2.ReentrantLock类可以唤醒指定条件的线程，而object.notify()唤醒是随机的
                  */
-                //mCondition.signal(); //condition对象的signal()方法可以唤醒wait线程
-                mCondition.signalAll();
+                //mEmptyCondition.signal(); //condition对象的signal()方法可以唤醒wait线程
+                mEmptyCondition.signalAll();
 
             } catch (Exception e) {
 
@@ -324,7 +332,7 @@ public class TestProducer_Consumer {
 
                     logI(TAG, "pop() of while await()!!!");
 
-                    mCondition.await();
+                    mEmptyCondition.await();
                 }
 
                 try {
@@ -335,8 +343,8 @@ public class TestProducer_Consumer {
 
                 isEmpty = true;
 
-                //mCondition.signal();
-                mCondition.signalAll();
+                //mFullCondition.signal();
+                mFullCondition.signalAll();
 
             } catch (Exception e) {
 
