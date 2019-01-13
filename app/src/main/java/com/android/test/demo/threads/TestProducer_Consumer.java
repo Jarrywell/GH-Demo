@@ -2,7 +2,15 @@ package com.android.test.demo.threads;
 
 import android.util.Log;
 
-import static com.android.test.demo.threads.TestProducer_Consumer.Person.logI;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 生产者&消费者模型
@@ -20,8 +28,19 @@ public class TestProducer_Consumer {
 
         /**
          * 共享资源
+         * 通过wait()和notify()实现的生产者/消费者
          */
-        Person p = new Person();
+        //Person p = new Person1();
+
+        /**
+         * 使用ReentrantLock(重入锁)实现的生产者/消费者模式
+         */
+        //Person p = new Person2();
+
+        /**
+         * 使用BlockingQueue实现的生产者/消费者模式
+         */
+        Person p = new Person3();
 
         /**
          * 生产者线程
@@ -36,8 +55,8 @@ public class TestProducer_Consumer {
          * 01-11 00:31:23.349 I/Threads ( 4104): [3825]push() of while wait() !!!
          * 01-11 00:31:23.350 I/Threads ( 4104): [3824]push() of while wait() !!!
          */
-        //Thread producer2 = new Thread(new Producer(p));
-        //producer2.start();
+        Thread producer2 = new Thread(new Producer(p));
+        producer2.start();
 
 
         /**
@@ -107,14 +126,38 @@ public class TestProducer_Consumer {
     /**
      * 资源操作类
      */
-    static class Person {
-        private String name;
-        private int age;
+    static abstract class Person {
+
+        /**
+         *
+         */
+        protected String name;
+        protected int age;
 
         /**
          * 表示共享资源对象是否为空，如果为true，表示需要生产，如果为false，则有数据了，不要生产
          */
-        private boolean isEmpty = true;
+        protected boolean isEmpty = true;
+
+        /**
+         * 生产数据
+         * @param name
+         * @param age
+         */
+        public abstract void push(String name, int age);
+
+        /**
+         * 消费数据
+         */
+        public abstract void pop();
+    }
+
+
+    /**
+     * 通过wait()和notify()实现的生产者/消费者
+     */
+    static class Person1 extends Person {
+
 
         /**
          * mLock主要是用来配合wait()/notify()方法的调用：
@@ -132,6 +175,7 @@ public class TestProducer_Consumer {
          * @param name
          * @param age
          */
+        @Override
         public void push(String name, int age) {
             synchronized (mLock) {
                 try {
@@ -179,6 +223,7 @@ public class TestProducer_Consumer {
         /**
          * 消费数据，说明参见push注释
          */
+        @Override
         public void pop() {
             synchronized(mLock) {
                 try {
@@ -206,19 +251,170 @@ public class TestProducer_Consumer {
 
             }
         }
+    }
 
-        public static void logI(String tag, String message) {
-            logI(tag, message, null);
-        }
+
+    /**
+     * 使用ReentrantLock(重入锁)实现的生产者/消费者模式
+     */
+    static class Person2 extends Person {
 
         /**
-         * 日志增加线程信息
-         * @param tag
-         * @param message
-         * @param t
+         * 重入锁: true--公平锁， false--非公平锁
+         *
+         * 公平锁指的是线程获取锁的顺序是按照加锁顺序来的，而非公平锁指的是抢锁机制，先lock的线程不一定先获得锁。
          */
-        public static void logI(String tag, String message, Throwable t) {
-            Log.i(tag, "[" + Thread.currentThread().getId() + "]" + message, t);
+        private Lock mLock = new ReentrantLock(false);
+
+        private Condition mCondition = mLock.newCondition();
+
+        @Override
+        public void push(String name, int age) {
+            mLock.lock();
+
+            try {
+                /**
+                 * 进入到while语句内，说明isEmpty==false，那么表示有数据了，不能生产，必须要等待消费者消费
+                 * 不能用if，因为可能有多个线程
+                 */
+                while (!isEmpty) {
+                    /**
+                     * 通过Condition对象来使线程wait，必须先执行lock.lock方法获得锁
+                     */
+                    mCondition.await(); //等价与Object.wait()方法
+                }
+
+                //--开始生产
+                this.name = name;
+                try {
+                    Thread.sleep(10); //模拟生产耗时
+                } catch (Exception e) {
+                }
+                this.age = age;
+                //--结束生产
+
+                isEmpty = false; //设置isEmpty为false,表示已经有数据了
+
+                /**
+                 * 生产完毕，唤醒所有消费者线程
+                 * （注意：signalAll()也会唤醒其他正在等待的生产者线程，但是生产者线程通过while()条件判断即使被唤
+                 * 醒也仍会进入wait状态）
+                 *
+                 * 1.一个condition对象的signal（signalAll）方法和该对象的await方法是一一对应的，
+                 * 也就是一个condition对象的signal（signalAll）方法不能唤醒其他condition对象的await方法
+                 *
+                 * 2.ReentrantLock类可以唤醒指定条件的线程，而object.notify()唤醒是随机的
+                 */
+                //mCondition.signal(); //condition对象的signal()方法可以唤醒wait线程
+                mCondition.signalAll();
+
+            } catch (Exception e) {
+
+            } finally {
+                mLock.unlock();
+            }
+        }
+
+        @Override
+        public void pop() {
+            mLock.lock();
+
+            try {
+                while (isEmpty) {
+
+                    logI(TAG, "pop() of while await()!!!");
+
+                    mCondition.await();
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {
+                }
+                logI(TAG, name + " -- " + age);
+
+                isEmpty = true;
+
+                //mCondition.signal();
+                mCondition.signalAll();
+
+            } catch (Exception e) {
+
+            } finally {
+                mLock.unlock();
+            }
         }
     }
+
+    /**
+     * 使用BlockingQueue实现的生产者/消费者模式
+     */
+    static class Person3 extends Person {
+        private final Object mValue = new Object();
+
+        /**
+         * SynchronousQueue必须是放和取交替完成的
+         */
+        private BlockingQueue<Object> mQueue = new SynchronousQueue<>();
+
+        /**
+         * 带缓冲区时使用这个缓存
+         * @param name
+         * @param age
+         */
+        //private BlockingQueue<Object> mQueue = new LinkedBlockingQueue<>(2);
+
+        @Override
+        public void push(String name, int age) {
+
+            try {
+                mQueue.put(mValue);
+            } catch (Exception e) {
+                logI(TAG, "", e);
+            }
+
+
+            //--开始生产
+            this.name = name;
+            try {
+                Thread.sleep(10); //模拟生产耗时
+            } catch (Exception e) {
+            }
+            this.age = age;
+            //--结束生产
+
+        }
+
+        @Override
+        public void pop() {
+
+            try {
+                mQueue.take();
+            } catch (Exception e) {
+                logI(TAG, "", e);
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+            }
+            logI(TAG, name + " -- " + age);
+
+        }
+    }
+
+    public static void logI(String tag, String message) {
+        logI(tag, message, null);
+    }
+
+    /**
+     * 日志增加线程信息
+     * @param tag
+     * @param message
+     * @param t
+     */
+    public static void logI(String tag, String message, Throwable t) {
+        Log.i(tag, "[" + Thread.currentThread().getId() + "]" + message, t);
+    }
+
 }
