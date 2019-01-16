@@ -1,5 +1,6 @@
 package com.android.test.demo;
 
+import com.android.test.demo.algorithm.Algorithms;
 import com.android.test.demo.arch.ArchBootActivity;
 import com.android.test.demo.exception.TestException;
 import com.android.test.demo.executor.GHTaskExecutor;
@@ -205,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
         //TestBounds5.test();
 
         //TestProducer_Consumer.test();
+
+        Algorithms.test();
     }
 
 
