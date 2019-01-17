@@ -1,6 +1,9 @@
 package com.android.test.demo.algorithm;
 
+import com.android.test.demo.algorithm.array.TestArray1;
 import com.android.test.demo.algorithm.list.TestList1;
+import com.android.test.demo.algorithm.list.TestList2;
+import com.android.test.demo.algorithm.num.TestNum1;
 import com.android.test.demo.algorithm.sort.HeapSort;
 
 public class Algorithms {
@@ -15,7 +18,17 @@ public class Algorithms {
         /**
          * 排序测试
          */
-        testSort();
+        //testSort();
+
+        /**
+         * 数字算法测试
+         */
+        //testNum();
+
+        /**
+         * 数组测试
+         */
+        //testArray();
     }
 
     private static void testList() {
@@ -33,6 +46,11 @@ public class Algorithms {
          * 链表中倒数第k个结点
          */
         TestList1.testFindKthToTail();
+
+        /**
+         * 复杂链表的复制
+         */
+        TestList2.test();
     }
 
     private static void testSort() {
@@ -40,5 +58,25 @@ public class Algorithms {
          * 堆排序
          */
         HeapSort.test();
+
+        /**
+         * 找最小的k个数
+         */
+        HeapSort.testKthNum();
+    }
+
+    private static void testNum() {
+        /**
+         * 找第index个丑数
+         */
+        TestNum1.test();
+    }
+
+
+    private static void testArray() {
+        /**
+         * 滑动窗口的最大值
+         */
+        TestArray1.test();
     }
 }

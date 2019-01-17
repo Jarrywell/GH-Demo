@@ -120,6 +120,15 @@
             android:text="测试Uri的解析接口"
             android:layout_marginBottom="10dp"
             />
+
+        <Button
+            android:id="@+id/btn_test_algorithm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="算法测试"
+            android:layout_marginBottom="10dp"
+            />
     </LinearLayout>
 
 </ScrollView>

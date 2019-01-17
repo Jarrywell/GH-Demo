@@ -145,6 +145,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btn_test_algorithm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Algorithms.test();
+            }
+        });
+
+
         //startActivity(new Intent(getApplicationContext(), ArchBootActivity.class));
         //测试异常
         //testException();

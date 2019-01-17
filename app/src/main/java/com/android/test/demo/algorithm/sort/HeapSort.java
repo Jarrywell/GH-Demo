@@ -18,14 +18,20 @@ public class HeapSort {
      * @param values
      */
     public static void sort(int[] values) {
-        if (values == null || values.length < 2) {
+        sort(values, values != null ? values.length : null);
+    }
+
+    /**
+     * 排序
+     * @param values
+     */
+    public static void sort(int[] values, int length) {
+        if (values == null || length < 2) {
             return;
         }
-        final int length = values.length;
-        //建立大顶堆：从最后一个非叶子节点开始：length/2-1
-        for (int i = length / 2 - 1; i>= 0; i--) {
-            adjustNode(values, i, length);
-        }
+
+        //建堆操作
+        initHeap(values, length);
 
         for (int i = length - 1; i >= 1; i--) {
             //把最大元素放到最后一个位置
@@ -40,7 +46,52 @@ public class HeapSort {
     }
 
     /**
-     *
+     * 找最小的k个数
+     * @param values
+     * @param k
+     */
+    public static void findKthNum(int[] values, int k) {
+        if (values == null) {
+            return;
+        }
+        final int length = values.length;
+        if (k >= length || length <2) {
+            return;
+        }
+        //建立大小为k的大堆
+        initHeap(values, k);
+
+        /**
+         * 核心实现：把接下来剩余元素分别与堆顶元素比较，若比堆顶小（堆顶是堆最大的元素），
+         * 则将该元素放在堆顶，并调整堆。
+         */
+        int value;
+        for (int i = k ; i < length; i++) {
+            if (values[i] < values[0]) {
+                value = values[0];
+                values[0] = values[i];
+                values[i] = value;
+                adjustNode(values, 0, k);
+            }
+        }
+    }
+
+    /**
+     * 建堆
+     * @param values
+     */
+    private static void initHeap(int[] values, int length) {
+        if (values == null || length < 2) {
+            return;
+        }
+        //建立大顶堆：从最后一个非叶子节点开始：length/2-1
+        for (int i = length / 2 - 1; i >= 0; i--) {
+            adjustNode(values, i, length);
+        }
+    }
+
+    /**
+     * 加入新元素后调整堆
      * @param values: 排序数组
      * @param i：起始位置
      * @param length：长度
@@ -72,6 +123,15 @@ public class HeapSort {
         int[] values = new int[] {9, 10, -1, 20, -30, 100};
         sort(values);
 
+        Log.i(TAG, "result: " + Arrays.toString(values));
+    }
+
+    /**
+     * 找最小的k个数
+     */
+    public static void testKthNum() {
+        int[] values = new int[] {9, 10, -1, 20, -30, 100, -40, 1, -10};
+        findKthNum(values, 3);
         Log.i(TAG, "result: " + Arrays.toString(values));
     }
 }
