@@ -1,10 +1,13 @@
 package com.android.test.demo.algorithm;
 
 import com.android.test.demo.algorithm.array.TestArray1;
+import com.android.test.demo.algorithm.bit.TestBit1;
 import com.android.test.demo.algorithm.list.TestList1;
 import com.android.test.demo.algorithm.list.TestList2;
 import com.android.test.demo.algorithm.num.TestNum1;
 import com.android.test.demo.algorithm.sort.HeapSort;
+import com.android.test.demo.algorithm.tree.TestTreeNode1;
+import com.android.test.demo.algorithm.tree.TreeNodeUtils;
 
 public class Algorithms {
     public static final String TAG = "Algorithms";
@@ -13,7 +16,7 @@ public class Algorithms {
         /**
          * 链表测试
          */
-        testList();
+        //testList();
 
         /**
          * 排序测试
@@ -29,6 +32,16 @@ public class Algorithms {
          * 数组测试
          */
         //testArray();
+
+        /**
+         * 位运算
+         */
+        //testBit();
+
+        /**
+         * 二叉树
+         */
+        testTreeNode();
     }
 
     private static void testList() {
@@ -78,5 +91,34 @@ public class Algorithms {
          * 滑动窗口的最大值
          */
         TestArray1.test();
+    }
+
+    /**
+     * 位运算
+     */
+    private static void testBit() {
+        /**
+         * 测试数中1的个数
+         */
+        TestBit1.test1Count();
+
+        /**
+         * 测试数中0的个数
+         */
+        TestBit1.test0Count();
+
+        /**
+         * 测试数中高位连续0的个数
+         */
+        TestBit1.testHigh0Count();
+    }
+
+    /**
+     * 二叉树
+     */
+    private static void testTreeNode() {
+        TestTreeNode1.test();
+
+        TreeNodeUtils.test();
     }
 }
