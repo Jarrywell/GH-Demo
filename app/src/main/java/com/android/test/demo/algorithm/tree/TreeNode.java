@@ -25,4 +25,10 @@ public class TreeNode<T> {
      */
     TreeNode<T> right;
 
+    /**
+     * 指向父节点
+     */
+    @Deprecated
+    TreeNode<T> next;
+
 }
