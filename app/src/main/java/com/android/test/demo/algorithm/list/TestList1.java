@@ -56,6 +56,61 @@ public class TestList1 {
         Log.i(TAG, "find " + k + " tail: " + (result != null ? result.data : "@null"));
     }
 
+    /**
+     * 删除链表中倒数第k个结点
+     */
+    public static void testRemoveKthToTail() {
+        /**
+         * 构建链表序列
+         */
+        ListNode<Integer> head = ListUtils.createListNodeOfArray(1, 2, 3, 4, 5, 6);
+        ListUtils.print(head);
+
+        final int k = 4;
+        ListNode<Integer> result = ListUtils.removeKthToTail(head, k);
+        ListUtils.print(result);
+    }
+
+    /**
+     * 求单链表的中间节点
+     */
+    public static void testFindMidNode() {
+        /**
+         * 构建链表序列
+         */
+        ListNode<Integer> head = ListUtils.createListNodeOfArray(1, 2, 3, 4, 5, 6, 7);
+        ListUtils.print(head);
+
+        ListNode<Integer> node = ListUtils.findMidNode(head);
+        Log.i(TAG, "mid: " + (node != null ? node.data : "@null"));
+    }
+
+    /**
+     * 判断单链表是否存在环
+     */
+    public static void testCycle() {
+        /**
+         * 构建链表序列
+         */
+        ListNode<Integer> head = ListUtils.createListNodeOfArray(1, 2, 3, 4, 5, 6, 7);
+        ListUtils.print(head);
+
+        ListNode<Integer> node = ListUtils.findKthToTail(head, 5);
+
+        ListNode<Integer> p = head;
+        while (p.next != null) {
+            p = p.next;
+        }
+        p.next = node;
+
+        boolean cycle = ListUtils.hasCycle(head);
+        Log.i(TAG, "has cycle: " + cycle);
+
+        ListNode<Integer> port = ListUtils.findLoopPort(head);
+        Log.i(TAG, "port: " + (port != null ? port.data : "@null"));
+    }
+
+
 
     /**
      * 删除链表中重复的节点
@@ -103,5 +158,6 @@ public class TestList1 {
 
         return firstNode.next;
     }
+
 
 }

@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.android.test.demo.algorithm.Algorithms;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TestArray2 {
 
@@ -183,6 +185,163 @@ public class TestArray2 {
     }
 
     /**
+     * 和为S的两个数
+     *
+     * 描述：
+     * 输入一个递增排序的数组和一个数字S，在数组中查找两个数，使得他们的和正好是S，如果有多对数字的和等于S，
+     * 输出两个数的乘积最小的。
+     *
+     * 思路：
+     * 数列满足递增，设两个头尾两个指针i和j
+     * @param array
+     * @param s
+     * @return
+     */
+    private static List<Integer> findOfSum(int[] array, int s) {
+        List<Integer> result = new ArrayList<>(2);
+        if (array == null || array.length < 2) {
+            return result;
+        }
+        int i = 0, j = array.length - 1;
+        int a1 = 0, a2 = 0;
+        int product = Integer.MAX_VALUE;
+        while (i < j) {
+            int sum = array[i] + array[j];
+            if (sum == s) {
+                int temp = array[i] * array[j];
+                if (temp < product) {
+                    a1 = array[i];
+                    a2 = array[j];
+                    product = temp;
+                }
+                j--;
+            } else if (sum > s) {
+                j--;
+            } else {
+                i++;
+            }
+        }
+        result.add(a1);
+        result.add(a2);
+
+        return result;
+    }
+
+    /**
+     * 和为S的连续正数序列
+     *
+     * 找出所有和为S的连续正数序列
+     *
+     * 思路：同上，利用大小指针实现
+     *
+     * @param sum
+     * @return
+     */
+    private static List<List<Integer>> findContinueOfSum(int sum) {
+        List<List<Integer>> result = new ArrayList<>();
+
+        if (sum < 3) {
+            return result;
+        }
+
+        int i = 1, j = 2; //指针初始值
+        final int end = (1 + sum) / 2; //小指针最大到此处停止，
+        List<Integer> success = new ArrayList<>();
+        while (i <= end) {
+            int current = sumOfList(i, j);
+            if (current == sum) {
+                for (int k = i; k <= j; k++) {
+                    success.add(k);
+                }
+                result.add(new ArrayList<>(success));
+                success.clear();
+                j++;
+            } else if (current > sum) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 调整数组顺序使奇数位于偶数前面 (不能保证奇数和奇数，偶数和偶数之间的相对位置不变)
+     *
+     * 描述：
+     * 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分
+     *
+     * https://blog.csdn.net/qq_25343557/article/details/79221649
+     *
+     * @param array
+     */
+    private static void adjustArrayOfParity(int[] array) {
+        if (array == null || array.length <= 0) {
+            return;
+        }
+
+        int i = 0, j = array.length - 1;
+        while (i < j) {
+         while (i < j && (array[i] & 1) == 1) {
+             i++;
+         }
+         while (i < j && (array[j] & 1) != 1) {
+             j--;
+         }
+         int c = array[i]; array[i] = array[j]; array[j] = c;
+        }
+    }
+
+    /**
+     * 调整数组顺序使奇数位于偶数前面 (且保证奇数和奇数，偶数和偶数之间的相对位置不变)
+     *
+     * https://blog.csdn.net/lawfay/article/details/81541067
+     *
+     * 要想保证顺序，那么交换只能发生在相邻元素之间或顺序移动，同样的使用两个标记，第一个标记start从数组头出发，
+     * 当找到第一个偶数后，第二个标记end从找到偶数的后一个位置出发找奇数，然后将start到end-1的元素整体后移，
+     * 将end的元素赋予start位置
+     *
+     * @param array
+     */
+    private static void adjustArrayOfParityEx(int[] array) {
+        if (array == null || array.length <= 0) {
+            return;
+        }
+
+        int i = 0, j = 0;
+        int length = array.length;
+        while (i < length) {
+            while (i < length && (array[i] & 1) == 1) {
+                i++;
+            }
+            j = i + 1;
+            while (j < length && (array[j] & 1) != 1) {
+                j++;
+            }
+            if (j < length) {
+                int current = array[j];
+                for (int k = j - 1; k >= i; k--) {
+                    array[k + 1] = array[k];
+                }
+                array[i++] = current;
+            } else {
+              break;
+            }
+        }
+    }
+
+
+
+    private static int sumOfList(int start, int end) {
+        int sum = 0;
+        for (int i = start; i <= end; i++) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    /**
      * 找数组中重复的数字
      */
     public static void testDuplicate() {
@@ -226,5 +385,33 @@ public class TestArray2 {
         int[] num2 = new int[] {0};
         findOfOnce(value, num1, num2);
         Log.i(TAG, "num1: " + num1[0] + ", num2: " + num2[0]);
+    }
+
+    /**
+     * 和为S的两个数
+     */
+    public static void testFindOfSum() {
+        int[] value = new int[] {1, 2, 3, 4, 5, 6, 7};
+        List<Integer> result = findOfSum(value, 9);
+        for (Integer item : result) {
+            Log.i(TAG, "sum of item: " + item);
+        }
+    }
+
+    public static void testFindContinueOfSum() {
+        List<List<Integer>> result = findContinueOfSum(100);
+        for (List<Integer> current : result) {
+            Log.i(TAG, "continue of sum: " + Arrays.toString(current.toArray()));
+        }
+    }
+
+    /**
+     * 调整数组顺序使奇数位于偶数前面
+     */
+    public static void testAdjustArrayOfParity() {
+        int[] value = new int[] {1, 2, 3, 4, 5, 6, 7};
+        Log.i(TAG, "origin: " + Arrays.toString(value));
+        adjustArrayOfParityEx(value);
+        Log.i(TAG, "dest: " + Arrays.toString(value));
     }
 }
