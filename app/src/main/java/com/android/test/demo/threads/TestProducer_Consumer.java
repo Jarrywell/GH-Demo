@@ -6,6 +6,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -30,17 +31,23 @@ public class TestProducer_Consumer {
          * 共享资源
          * 通过wait()和notify()实现的生产者/消费者
          */
-        //Person p = new Person1();
+        Person p = new Person1();
 
         /**
          * 使用ReentrantLock(重入锁)实现的生产者/消费者模式
          */
-        Person p = new Person2();
+        //Person p = new Person2();
 
         /**
          * 使用BlockingQueue实现的生产者/消费者模式
          */
         //Person p = new Person3();
+
+
+        /**
+         * Semaphore
+         */
+        //Person p = new Person4();
 
         /**
          * 生产者线程
@@ -407,6 +414,54 @@ public class TestProducer_Consumer {
             } catch (Exception e) {
             }
             logI(TAG, name + " -- " + age);
+
+        }
+    }
+
+    static class Person4 extends Person {
+
+        private Semaphore mSemaphore = new Semaphore(0, false);
+
+        @Override
+        public void push(String name, int age) {
+
+            try {
+                mSemaphore.acquire();
+            } catch (Exception e) {
+            }
+
+
+            //--开始生产
+            this.name = name;
+            try {
+                Thread.sleep(10); //模拟生产耗时
+            } catch (Exception e) {
+            }
+            this.age = age;
+            //--结束生产
+
+            isEmpty = false; //设置isEmpty为false,表示已经有数据了
+
+            mSemaphore.release();
+        }
+
+        @Override
+        public void pop() {
+
+            try {
+                mSemaphore.acquire();
+            } catch (Exception e) {
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+            }
+            logI(TAG, name + " -- " + age);
+
+            isEmpty = true;
+
+            mSemaphore.release();
 
         }
     }

@@ -9,6 +9,9 @@ import java.util.Stack;
 
 /**
  * 快速排序
+ *
+ * 参考
+ * https://blog.csdn.net/qq_36528114/article/details/78667034
  */
 public class QuickSort {
     private static final String TAG = Algorithms.TAG;

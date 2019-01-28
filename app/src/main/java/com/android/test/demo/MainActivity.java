@@ -18,6 +18,7 @@ import com.android.test.demo.plugin.activitys.OriginActivity;
 import com.android.test.demo.proxy.TestHelloWorld;
 import com.android.test.demo.state.TankStateManchineActivity;
 import com.android.test.demo.swipeback.TestSwipeBackActivity;
+import com.android.test.demo.threads.TestPrinter;
 import com.android.test.demo.uri.TestUri;
 import com.android.test.demo.uri.UrlBean;
 import com.android.test.demo.threads.TestProducer_Consumer;
@@ -216,7 +217,9 @@ public class MainActivity extends AppCompatActivity {
 
         //TestProducer_Consumer.test();
 
-        Algorithms.test();
+        TestPrinter.test();
+
+        //Algorithms.test();
     }
 
 
